@@ -19,6 +19,6 @@
 
 # Go workspace file
 go.work
-.vscode
-node_modules
+
 .env
+.vscode
