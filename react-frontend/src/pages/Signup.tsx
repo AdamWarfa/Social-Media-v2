@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 import LoginAttempt from "../models/loginValues";
 import { postUser } from "../api/createUser";
 
-import Header from "../components/Header";
+import Nav from "../components/Nav";
 import AuthorType from "../models/author";
 
 interface LoginProps {
@@ -77,7 +77,7 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
 
   return (
     <>
-      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />
+      <Nav loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} currentPage="signup/profile" />
       <div style={{ padding: "1rem" }}>
         <h1 style={{ marginTop: "70px" }}>Create an account</h1>
         <form action="" method="post" onSubmit={handleSignupForm}>

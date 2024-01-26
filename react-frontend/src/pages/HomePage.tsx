@@ -1,4 +1,4 @@
-import Header from "../components/Header";
+import Nav from "../components/Nav";
 import HomeGrid from "../components/HomeGrid";
 
 interface HomePageProps {
@@ -11,7 +11,7 @@ interface HomePageProps {
 export default function HomePage({ loggedIn, setLoggedIn, userId, setUserId }: HomePageProps) {
   return (
     <>
-      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />
+      <Nav loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} currentPage="homepage" />
       <h1>Home Page</h1>
       <HomeGrid userId={userId} loggedIn={loggedIn} />
     </>

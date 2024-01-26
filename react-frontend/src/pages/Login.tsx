@@ -2,8 +2,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../api/firebase";
 import { NavLink } from "react-router-dom";
 import LoginAttempt from "../models/loginValues";
-
-import Header from "../components/Header";
+import Nav from "../components/Nav";
 
 interface LoginProps {
   loggedIn: boolean;
@@ -47,7 +46,7 @@ export default function Login({ loggedIn, setLoggedIn, userId, setUserId }: Logi
 
   return (
     <>
-      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />
+      <Nav loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} currentPage="login" />
       <div style={{ padding: "1rem" }}>
         <h1 style={{ marginTop: "70px" }}>Login</h1>
         <form action="" method="post" onSubmit={handleLoginForm}>

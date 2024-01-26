@@ -26,7 +26,7 @@ export default function Post({ post }: PostProps) {
     likePost(thisPost)
       .then((response) => {
         // Use the returned object directly to update the state
-        setThisPost(response[0]);
+        setThisPost(response);
 
         // Additional logic after the state is updated, if needed
         console.log("Post liked successfully:", response);

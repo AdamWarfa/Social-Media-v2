@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import Header from "../components/Header";
 import ProfileGrid from "../components/ProfileGrid";
+import Nav from "../components/Nav";
 
 interface ProfilePageProps {
   loggedIn: boolean;
@@ -14,7 +14,7 @@ export default function ProfilePage({ loggedIn, setLoggedIn, setUserId, userId }
 
   return (
     <>
-      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />
+      <Nav loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} currentPage="signup/profile" />
       <h1>Profile Page</h1>
       <ProfileGrid authorId={id} />
     </>

@@ -84,20 +84,17 @@ func LikePost(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	var post models.Post
-
-	result := initializers.DB.First(&post, id)
-
-	if result.Error != nil {
-		return c.Status(http.StatusNotFound).JSON(fiber.Map{"error": "Post not found"})
+		if err := initializers.DB.Where("id = ?", id).First(&post).Error; err != nil {
+		return c.Status(404).SendString("Post not found")
 	}
 
 	post.Likes = post.Likes + 1
 
-	result = initializers.DB.Save(&post)
+	result := initializers.DB.Save(&post)
 
 	if result.Error != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save post"})
 	}
 
-	return c.Status(http.StatusOK).JSON(fiber.Map{"post": post})
+	return c.Status(http.StatusOK).JSON(post)
 }
