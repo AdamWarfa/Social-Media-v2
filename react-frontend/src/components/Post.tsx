@@ -46,7 +46,9 @@ export default function Post({ post }: PostProps) {
           </NavLink>
 
           <div>
-            <p className="text-gray-800 font-semibold">{author.username}</p>
+            <NavLink to={`/profile/${author.id}`}>
+              <p className="text-gray-800 font-semibold">{author.username}</p>
+            </NavLink>
             <p className="text-gray-500 text-sm">
               Posted{" "}
               {new Date(thisPost.postDate).toLocaleString("en-GB", {
