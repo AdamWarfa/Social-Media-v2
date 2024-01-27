@@ -1,5 +1,8 @@
 -- Switch to the somev2_db database
-\c somev2_db;
+-- \c somev2_db;
+
+DROP TABLE IF EXISTS "posts";
+DROP TABLE IF EXISTS "users";
 
 -- Create the users table
 CREATE TABLE "users" (
