@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import { auth } from "../api/firebase";
 import { signOut } from "firebase/auth";
 import { getAuthor } from "../api/get";
-import { get } from "firebase/database";
 
 interface HeaderProps {
   loggedIn: boolean;
