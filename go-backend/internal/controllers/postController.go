@@ -16,8 +16,6 @@ func GetPosts(c *fiber.Ctx) error {
 
 	result := initializers.DB.Find(&posts)
 
-	fmt.Println(posts)
-
 	if result.Error != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch posts"})
 	}
