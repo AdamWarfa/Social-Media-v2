@@ -95,7 +95,7 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
         <p>
           Already have an account?
           <NavLink to={`/login`} className="text-blue-400 hover:text-blue-500">
-            Sing in here
+            Sign in here
           </NavLink>
         </p>
       </div>

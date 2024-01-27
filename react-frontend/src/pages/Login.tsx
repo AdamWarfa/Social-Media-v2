@@ -61,7 +61,7 @@ export default function Login({ loggedIn, setLoggedIn, userId, setUserId }: Logi
         <p>
           Don't have an account?
           <NavLink to={`/signup`} className="text-blue-400 hover:text-blue-500">
-            Sing up here
+            Sign up here
           </NavLink>
         </p>
       </div>
