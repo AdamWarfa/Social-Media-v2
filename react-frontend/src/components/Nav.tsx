@@ -57,7 +57,7 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
     </NavLink>
   ) : (
     <NavLink to="/signup" className={currentPage == "signup/profile" ? currentPageClass : otherPageClass}>
-      <a href="#">Sign-Up</a>
+      <a href="#">Create Account</a>
     </NavLink>
   );
 

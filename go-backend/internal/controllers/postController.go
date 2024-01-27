@@ -1,22 +1,19 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"somev2/internal/initializers"
 	"somev2/internal/models"
-
-	"github.com/google/uuid"
+	"somev2/internal/services"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 func GetPosts(c *fiber.Ctx) error {
-	var posts []models.Post
 
-	result := initializers.DB.Find(&posts)
-
-	if result.Error != nil {
+	posts, err := services.GetPosts()
+	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch posts"})
 	}
 
@@ -25,12 +22,10 @@ func GetPosts(c *fiber.Ctx) error {
 
 func GetPost(c *fiber.Ctx) error {
 	id := c.Params("id")
-	fmt.Println(id)
 
-	var post models.Post
-
-	if err := initializers.DB.Where("id = ?", id).First(&post).Error; err != nil {
-		return c.Status(404).SendString("Post not found")
+	post, err := services.GetPost(id)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch post"})
 	}
 
 	return c.Status(http.StatusOK).JSON(post)
@@ -39,11 +34,9 @@ func GetPost(c *fiber.Ctx) error {
 func GetPostsByAuthor(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	var posts []models.Post
+	posts, err := services.GetPostsByAuthor(id)
 
-	result := initializers.DB.Where("author = ?", id).Find(&posts)
-
-	if result.Error != nil {
+	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch posts"})
 	}
 
@@ -51,13 +44,7 @@ func GetPostsByAuthor(c *fiber.Ctx) error {
 }
 
 func CreatePost(c *fiber.Ctx) error {
-	var body struct {
-		Text     string `json:"text"`
-		Author   string `json:"author"`
-		ImgSrc   string `json:"imgSrc"`
-		Likes    int    `json:"likes"`
-		PostDate string `json:"postDate"`
-	}
+	var body models.Post
 
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid JSON"})
@@ -67,13 +54,11 @@ func CreatePost(c *fiber.Ctx) error {
 
 	post := models.Post{Id: newUUID.String(), Text: body.Text, Author: body.Author, ImgSrc: body.ImgSrc, Likes: body.Likes, PostDate: body.PostDate}
 
-	result := initializers.DB.Create(&post)
+	post, err := services.CreatePost(post)
 
-	if result.Error != nil {
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save post"})
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to create post"})
 	}
-
-	fmt.Printf("Post %v saved in DB", &post.Id)
 
 	return c.Status(http.StatusOK).JSON(post)
 }
@@ -82,7 +67,7 @@ func LikePost(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	var post models.Post
-		if err := initializers.DB.Where("id = ?", id).First(&post).Error; err != nil {
+	if err := initializers.DB.Where("id = ?", id).First(&post).Error; err != nil {
 		return c.Status(404).SendString("Post not found")
 	}
 
