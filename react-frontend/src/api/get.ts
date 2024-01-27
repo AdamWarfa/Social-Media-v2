@@ -19,13 +19,13 @@ async function getPosts(sortOption: string) {
 
 async function getAuthor(id: string) {
   const res = await fetch(`${endpoint}/users/${id}`);
-  const data = res.json();
+  const data = await res.json();
   return data;
 }
 
 async function getPostsByAuthor(id: string | undefined) {
   const res = await fetch(`${endpoint}/posts/author/${id}`);
-  const data = res.json();
+  const data = await res.json();
   return data;
 }
 

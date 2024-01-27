@@ -37,7 +37,7 @@ export default function HomeGrid({ userId, loggedIn }: HomeGridProps) {
       <div className="py-12 flex items-center justify-center">
         <div className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-1 gap-2">
           <CreatePost loggedIn={loggedIn} userId={userId} />
-          <select name="sortHome" id="sortHome" value={sortOption} onChange={handleSortChange}>
+          <select className="rounded-lg" name="sortHome" id="sortHome" value={sortOption} onChange={handleSortChange}>
             <option value="new">New</option>
             <option value="popular">Popular</option>
           </select>
