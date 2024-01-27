@@ -12,7 +12,6 @@ export default function HomePage({ loggedIn, setLoggedIn, userId, setUserId }: H
   return (
     <>
       <Nav loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} currentPage="homepage" />
-      <h1>Home Page</h1>
       <HomeGrid userId={userId} loggedIn={loggedIn} />
     </>
   );

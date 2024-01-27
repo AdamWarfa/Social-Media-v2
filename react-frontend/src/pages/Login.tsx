@@ -54,7 +54,7 @@ export default function Login({ loggedIn, setLoggedIn, userId, setUserId }: Logi
           <input type="password" name="loginPassword" id="loginPassword" placeholder="Type Password..." />
           <br />
           <br />
-          <button>Login</button>
+          <button className="gradient-button py-2 px-4 rounded-xl">Login</button>
           <br />
           <br />
         </form>

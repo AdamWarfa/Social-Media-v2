@@ -44,7 +44,7 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
   const closeDropdownClass = dropdownClass + "transform opacity-0 scale-95";
   const openDropdownClass = dropdownClass + "transform opacity-100 scale-100";
 
-  const currentPageClass = "bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium";
+  const currentPageClass = "bg-gray-800 text-white rounded-md px-3 py-2 text-sm font-medium";
   const otherPageClass = "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium";
 
   const toggleDropdown = () => {
@@ -161,9 +161,9 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
           --> */}
                   <div className={IsDropdown ? openDropdownClass : closeDropdownClass} role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex={-1}>
                     {/* <!-- Active: "bg-gray-100", Not Active: "" --> */}
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex={-1} id="user-menu-item-0">
-                      Your Profile
-                    </a>
+                    <NavLink to={`/profile/${userId}`} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex={-1} id="user-menu-item-0">
+                      <a href="#">Your Profile</a>
+                    </NavLink>
                     <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex={-1} id="user-menu-item-1">
                       Settings
                     </a>

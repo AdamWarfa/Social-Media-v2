@@ -88,7 +88,7 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
 
           <br />
           <br />
-          <button>Sign Up</button>
+          <button className="gradient-button py-2 px-4 rounded-xl">Sign Up</button>
           <br />
           <br />
         </form>

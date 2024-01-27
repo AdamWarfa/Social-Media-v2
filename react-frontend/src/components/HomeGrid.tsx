@@ -35,7 +35,7 @@ export default function HomeGrid({ userId, loggedIn }: HomeGridProps) {
   return (
     <>
       <div className="py-12 flex items-center justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-1 xl:grid-cols-1 gap-2">
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-1 xl:grid-cols-1 gap-2">
           <CreatePost loggedIn={loggedIn} userId={userId} />
           <select className="rounded-lg" name="sortHome" id="sortHome" value={sortOption} onChange={handleSortChange}>
             <option value="new">New</option>

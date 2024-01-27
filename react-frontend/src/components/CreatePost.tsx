@@ -40,9 +40,8 @@ export default function CreatePost({ loggedIn, userId }: CreatePostProps) {
     <>
       {loggedIn && (
         <>
-          <h2>Create Post</h2>
           <div className="flex justify-center items-center m-5">
-            <div className="w-20 h-20 p-20 gradient-button transition-transform rounded-full flex justify-center items-center" onClick={handleOpenDialog}>
+            <div className="w-20 h-20 p-16 gradient-button transition-transform rounded-full flex justify-center items-center" onClick={handleOpenDialog}>
               <h2 className="p-0 text-8xl text-slate-800">+</h2>
             </div>
           </div>

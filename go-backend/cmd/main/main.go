@@ -1,9 +1,9 @@
 package main
 
 import (
-	"somev2/initializers"
 	"somev2/internal/controllers"
-	"somev2/models"
+	"somev2/internal/initializers"
+	"somev2/internal/models"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"

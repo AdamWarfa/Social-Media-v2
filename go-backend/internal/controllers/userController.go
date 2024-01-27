@@ -3,8 +3,8 @@ package controllers
 import (
 	"fmt"
 	"net/http"
-	"somev2/initializers"
-	"somev2/models"
+	"somev2/internal/initializers"
+	"somev2/internal/models"
 
 	"github.com/gofiber/fiber/v2"
 )
