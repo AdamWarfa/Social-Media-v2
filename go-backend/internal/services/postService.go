@@ -20,3 +20,10 @@ func GetPostsByAuthor(id string) ([]models.Post, error) {
 func CreatePost(post models.Post) (models.Post, error) {
 	return repositories.CreatePost(post)
 }
+
+func LikePost(id string, post *models.Post) (models.Post, error) {
+
+	post.Likes = post.Likes + 1
+
+	return repositories.LikePost(id, post)
+}

@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"somev2/internal/initializers"
 	"somev2/internal/models"
 	"somev2/internal/services"
 
@@ -66,18 +65,11 @@ func CreatePost(c *fiber.Ctx) error {
 func LikePost(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	var post models.Post
-	if err := initializers.DB.Where("id = ?", id).First(&post).Error; err != nil {
-		return c.Status(404).SendString("Post not found")
+	post, err := services.GetPost(id)
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch post"})
 	}
-
-	post.Likes = post.Likes + 1
-
-	result := initializers.DB.Save(&post)
-
-	if result.Error != nil {
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save post"})
-	}
+	post, err = services.LikePost(id, &post)
 
 	return c.Status(http.StatusOK).JSON(post)
 }

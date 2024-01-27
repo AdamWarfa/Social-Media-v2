@@ -50,3 +50,14 @@ func CreatePost(post models.Post) (models.Post, error) {
 
 	return post, nil
 }
+
+func LikePost(id string, post *models.Post) (models.Post, error) {
+
+	result := initializers.DB.Save(&post)
+
+	if result.Error != nil {
+		return models.Post{}, result.Error
+	}
+
+	return *post, nil
+}
