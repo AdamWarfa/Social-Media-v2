@@ -7,13 +7,16 @@ import (
 )
 
 func PostRoutes(app *fiber.App) {
-	app.Get("/posts", controllers.GetPosts)
 
-	app.Get("/posts/:id", controllers.GetPost)
+	posts := app.Group("/posts")
 
-	app.Get("/posts/author/:id", controllers.GetPostsByAuthor)
+	posts.Get("/", controllers.GetPosts)
 
-	app.Post("/posts", controllers.CreatePost)
+	posts.Get("/:id", controllers.GetPost)
 
-	app.Put("/posts/:id", controllers.LikePost)
+	posts.Get("/author/:id", controllers.GetPostsByAuthor)
+
+	posts.Post("/", controllers.CreatePost)
+
+	posts.Put("/:id", controllers.LikePost)
 }

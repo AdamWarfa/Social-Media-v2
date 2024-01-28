@@ -7,11 +7,14 @@ import (
 )
 
 func UserRoutes(app *fiber.App) {
-	app.Get("/users", controllers.GetUsers)
 
-	app.Get("/users/:id", controllers.GetUser)
+	users := app.Group("/users")
 
-	app.Post("/users", controllers.SaveUser)
+	users.Get("/", controllers.GetUsers)
 
-	app.Put("/users/:id", controllers.UpdateUser)
+	users.Get("/:id", controllers.GetUser)
+
+	users.Post("/", controllers.SaveUser)
+
+	users.Put("/:id", controllers.UpdateUser)
 }
