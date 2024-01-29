@@ -61,3 +61,16 @@ func LikePost(id string, post *models.Post) (models.Post, error) {
 
 	return *post, nil
 }
+
+func DeletePost(id string) error {
+
+	result := initializers.DB.Where("id = ?", id).Delete(&models.Post{})
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	fmt.Println("Post deleted from DB")
+
+	return nil
+}

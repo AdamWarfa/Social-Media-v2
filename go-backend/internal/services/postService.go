@@ -27,3 +27,7 @@ func LikePost(id string, post *models.Post) (models.Post, error) {
 
 	return repositories.LikePost(id, post)
 }
+
+func DeletePost(id string) error {
+	return repositories.DeletePost(id)
+}

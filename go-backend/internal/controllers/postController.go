@@ -73,3 +73,15 @@ func LikePost(c *fiber.Ctx) error {
 
 	return c.Status(http.StatusOK).JSON(post)
 }
+
+func DeletePost(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	err := services.DeletePost(id)
+
+	if err != nil {
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to delete post"})
+	}
+
+	return c.SendStatus(http.StatusOK)
+}
