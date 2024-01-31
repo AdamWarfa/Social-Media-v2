@@ -4,14 +4,17 @@ import PostType from "../models/post";
 import AuthorType from "../models/author";
 import { getAuthor } from "../api/get";
 import { likePost } from "../api/likePost";
+import { deletePost } from "../api/deletePost";
 
 interface PostProps {
   post: PostType;
+
 }
 
 export default function Post({ post }: PostProps) {
   const [thisPost, setThisPost] = useState<PostType>(post);
   const [author, setAuthor] = useState<AuthorType>({} as AuthorType);
+  const [isPostDropdown, setIsPostDropdown] = useState(false);
 
   useEffect(() => {
     function findAuthor() {
@@ -36,6 +39,14 @@ export default function Post({ post }: PostProps) {
       });
   };
 
+  const dropdownClass = "absolute left-[52vw] z-10 mt-[-30px] w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition ease-out duration-100";
+  const closeDropdownClass = dropdownClass + "transform opacity-0 scale-95";
+  const openDropdownClass = dropdownClass + "transform opacity-100 scale-100";
+
+  const toggleDropdown = () => {
+    setIsPostDropdown(!isPostDropdown);
+  };
+
   return (
     <div className="bg-white p-8 rounded-lg shadow-md max-w-md mb-10">
       {/* <!-- User Info with Three-Dot Menu --> */}
@@ -50,7 +61,7 @@ export default function Post({ post }: PostProps) {
               <p className="text-gray-800 font-semibold">{author.username}</p>
             </NavLink>
             <p className="text-gray-500 text-sm">
-              Posted{" "}
+              Posted
               {new Date(thisPost.postDate).toLocaleString("en-GB", {
                 dateStyle: "full",
                 timeStyle: "long",
@@ -60,7 +71,7 @@ export default function Post({ post }: PostProps) {
         </div>
         <div className="text-gray-500 cursor-pointer">
           {/* <!-- Three-dot menu icon --> */}
-          <button className="hover:bg-gray-50 rounded-full p-1">
+          <button onClick={toggleDropdown} className="hover:bg-gray-50 rounded-full p-1">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
               <circle cx="12" cy="7" r="1" />
               <circle cx="12" cy="12" r="1" />
@@ -68,6 +79,19 @@ export default function Post({ post }: PostProps) {
             </svg>
           </button>
         </div>
+      </div>
+      <div className={isPostDropdown ? openDropdownClass : closeDropdownClass} role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex={-1}>
+        {/* <!-- Active: "bg-gray-100", Not Active: "" --> */}
+        <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabIndex={-1} id="user-menu-item-0">
+          Edit Post
+        </a>
+        <a onClick={() => {
+          deletePost(post.id);
+          UpdateGrid();
+        }}
+         href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabIndex={-1} id="user-menu-item-1">
+          Delete Post
+        </a>
       </div>
       {/* <!-- Message --> */}
       <div className="mb-4">

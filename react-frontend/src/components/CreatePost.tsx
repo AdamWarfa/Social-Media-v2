@@ -51,7 +51,7 @@ export default function CreatePost({ loggedIn, userId }: CreatePostProps) {
 
       {isDialogOpen && (
         <>
-          <section className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
+          <section className="fixed top-0 left-0 z-50 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center">
             <div className=" bg-white editor mx-auto w-10/12 flex flex-col text-gray-800 rounded-lg p-4 shadow-lg max-w-2xl">
               <div className="heading text-center font-bold text-2xl m-5 text-gray-800">New Post</div>
               <form action="" method="post" onSubmit={handleCreatePost}>
