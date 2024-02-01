@@ -11,7 +11,6 @@ interface HomeGridProps {
 
 export default function HomeGrid({ userId, loggedIn }: HomeGridProps) {
   const [postList, setPostList] = useState<PostType[] | undefined>(undefined); // Initialize as undefined
-
   const [sortOption, setSortOption] = useState("new");
 
   useEffect(() => {

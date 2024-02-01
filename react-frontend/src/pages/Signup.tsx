@@ -78,17 +78,68 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
   return (
     <>
       <Nav loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} currentPage="signup/profile" />
-      <div style={{ padding: "1rem" }}>
-        <h1 style={{ marginTop: "70px" }}>Create an account</h1>
-        <form action="" method="post" onSubmit={handleSignupForm}>
-          <input type="email" name="signupEmail" id="signupEmail" placeholder="Type Email..." required />
-          <input type="Username" name="signupUsername" id="signupUsername" placeholder="Choose Username.." required />
-          <input type="password" name="signupPassword" id="signupPassword" placeholder="Choose Password..." required />
-          <input type="url" name="signupAvatar" id="signupAvatar" placeholder="Enter Profile Picture URL..." required />
-
+      <div className="p-4">
+        <h1 className="mt-24 mb-4 text-2xl text-center">Create an account</h1>
+        <form action="" method="post" onSubmit={handleSignupForm} className="max-w-sm mx-auto">
+          <div className="mb-5">
+            <label htmlFor="signupEmail" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Your email
+            </label>
+            <input
+              type="email"
+              name="signupEmail"
+              id="signupEmail"
+              placeholder="Type Email..."
+              required
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black-800 dark:border-black-600 dark:placeholder-black-300 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
+          <div className="mb-5">
+            <label htmlFor="signupUsername" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Your username
+            </label>
+            <input
+              type="Username"
+              name="signupUsername"
+              id="signupUsername"
+              placeholder="Choose Username.."
+              required
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black-800 dark:border-black-600 dark:placeholder-black-300 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
+          <div className="mb-5">
+            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Your password
+            </label>
+            <input
+              type="password"
+              name="signupPassword"
+              id="signupPassword"
+              placeholder="Choose Password..."
+              required
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black-800 dark:border-black-600 dark:placeholder-black-300 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
+          <div className="mb-5">
+            <label htmlFor="signUpAvatar" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Your profile picture
+            </label>
+            <input
+              type="url"
+              name="signupAvatar"
+              id="signupAvatar"
+              placeholder="Enter Profile Picture URL..."
+              required
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black-800 dark:border-black-600 dark:placeholder-black-300 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
           <br />
-          <br />
-          <button className="gradient-button py-2 px-4 rounded-xl">Sign Up</button>
+          <button
+            type="submit"
+            className="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
+          >
+            Sign Up
+          </button>
           <br />
           <br />
         </form>
