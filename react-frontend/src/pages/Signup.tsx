@@ -143,10 +143,10 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
           <br />
           <br />
         </form>
-        <p>
+        <p className="mt-10 ml-8">
           Already have an account?
           <NavLink to={`/login`} className="text-blue-400 hover:text-blue-500">
-            Sign in here
+            <span> Sign in here</span>
           </NavLink>
         </p>
       </div>

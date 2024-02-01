@@ -95,10 +95,10 @@ export default function Login({ loggedIn, setLoggedIn, userId, setUserId }: Logi
             Login
           </button>
         </form>
-        <p>
+        <p className="mt-10 ml-8">
           Don't have an account?
           <NavLink to={`/signup`} className="text-blue-400 hover:text-blue-500">
-            Sign up here
+            <span> Sign up here</span>
           </NavLink>
         </p>
       </div>
