@@ -9,9 +9,25 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetUsers(c *fiber.Ctx) error {
+type UserController interface {
+	GetUsers(c *fiber.Ctx) error
+	GetUser(c *fiber.Ctx) error
+	SaveUser(c *fiber.Ctx) error
+	UpdateUser(c *fiber.Ctx) error
+}
 
-	users, err := services.GetUsers()
+type ProdUserController struct {
+	service services.UserService
+}
+
+func NewProdUserController(service services.UserService) *ProdUserController {
+	return &ProdUserController{
+		service: service,
+	}
+}
+
+func (uc *ProdUserController) GetUsers(c *fiber.Ctx) error {
+	users, err := uc.service.GetUsers()
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch users"})
 	}
@@ -19,10 +35,10 @@ func GetUsers(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(users)
 }
 
-func GetUser(c *fiber.Ctx) error {
+func (uc *ProdUserController) GetUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	user, err := services.GetUser(id)
+	user, err := uc.service.GetUser(id)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch user"})
 	}
@@ -30,14 +46,14 @@ func GetUser(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(user)
 }
 
-func SaveUser(c *fiber.Ctx) error {
+func (uc *ProdUserController) SaveUser(c *fiber.Ctx) error {
 	var body models.User
 
 	if err := c.BodyParser(&body); err != nil {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid JSON"})
 	}
 
-	user, err := services.SaveUser(body)
+	user, err := uc.service.SaveUser(body)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save user"})
 	}
@@ -47,7 +63,7 @@ func SaveUser(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(fiber.Map{"user": user})
 }
 
-func UpdateUser(c *fiber.Ctx) error {
+func (uc *ProdUserController) UpdateUser(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 
@@ -57,7 +73,7 @@ func UpdateUser(c *fiber.Ctx) error {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid JSON"})
 	}
 
-	user, err := services.UpdateUser(id, body)
+	user, err := uc.service.UpdateUser(id, body)
 	if err != nil {
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to update user"})
 	}

@@ -31,9 +31,14 @@ func main() {
 	postService := services.NewProdPostService(postRepo)
 	postController := controllers.NewProdPostController(postService)
 
+	// User
+	userRepo := repositories.NewProdUserRepository(initializers.DB)
+	userService := services.NewProdUserService(userRepo)
+	userController := controllers.NewProdUserController(userService)
+
 	// Routes
 	routes.PostRoutes(app, postController)
-	routes.UserRoutes(app)
+	routes.UserRoutes(app, userController)
 
 	err := app.Listen(":4000")
 	if err != nil {
