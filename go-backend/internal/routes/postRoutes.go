@@ -6,19 +6,19 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func PostRoutes(app *fiber.App) {
+func PostRoutes(app *fiber.App, pc *controllers.ProdPostController) {
 
 	posts := app.Group("/posts")
 
-	posts.Get("/", controllers.GetPosts)
+	posts.Get("/", pc.GetPosts)
 
-	posts.Get("/:id", controllers.GetPost)
+	posts.Get("/:id", pc.GetPost)
 
-	posts.Get("/author/:id", controllers.GetPostsByAuthor)
+	posts.Get("/author/:id", pc.GetPostsByAuthor)
 
-	posts.Post("/", controllers.CreatePost)
+	posts.Post("/", pc.CreatePost)
 
-	posts.Put("/:id", controllers.LikePost)
+	posts.Put("/:id", pc.LikePost)
 
-	posts.Delete("/:id", controllers.DeletePost)
+	posts.Delete("/:id", pc.DeletePost)
 }
