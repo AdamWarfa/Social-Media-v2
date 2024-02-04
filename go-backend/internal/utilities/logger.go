@@ -1,29 +1,31 @@
 package utilities
 
 import (
-	"log"
 	"os"
+
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
-type Logger struct {
-	InfoLogger  *log.Logger
-	ErrorLogger *log.Logger
-	WarnLogger  *log.Logger
-}
+func NewLogger() *zap.Logger {
 
-func SetUpLogger() {
-	file, _ := os.Create("log.log")
-	log.SetOutput(file)
-}
+	encoderConfig := zap.NewProductionEncoderConfig()
+	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	fileEncoder := zapcore.NewJSONEncoder(encoderConfig)
+	logFile, err := os.OpenFile("logs/log.json", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0664)
+	if err != nil {
+		panic(err)
+	}
 
-func (l *Logger) Info(message string) {
-	l.InfoLogger.Println(message)
-}
+	writer := zapcore.AddSync(logFile)
+	defaultLogLevel := zapcore.DebugLevel
 
-func (l *Logger) Error(message string) {
-	l.ErrorLogger.Println(message)
-}
+	core := zapcore.NewTee(
+		zapcore.NewCore(fileEncoder, writer, defaultLogLevel),
+	)
 
-func (l *Logger) Warn(message string) {
-	l.WarnLogger.Println(message)
+	logger := zap.New(core, zap.AddStacktrace(zapcore.ErrorLevel))
+	defer logger.Sync()
+
+	return logger
 }

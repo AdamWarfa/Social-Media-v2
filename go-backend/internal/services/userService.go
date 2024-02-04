@@ -3,6 +3,9 @@ package services
 import (
 	"somev2/internal/models"
 	"somev2/internal/repositories"
+	"somev2/internal/utilities"
+
+	"go.uber.org/zap"
 )
 
 type UserService interface {
@@ -13,12 +16,14 @@ type UserService interface {
 }
 
 type ProdUserService struct {
-	repo repositories.UserRepository
+	repo   repositories.UserRepository
+	logger *zap.Logger
 }
 
 func NewProdUserService(repo repositories.UserRepository) *ProdUserService {
 	return &ProdUserService{
-		repo: repo,
+		repo:   repo,
+		logger: utilities.NewLogger(),
 	}
 }
 

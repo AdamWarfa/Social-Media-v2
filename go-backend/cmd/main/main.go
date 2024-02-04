@@ -13,13 +13,16 @@ import (
 )
 
 func init() {
+	// Load environment variables
 	initializers.LoadEnv()
 	initializers.ConnectDB()
 }
 
 func main() {
+	// Migrate the schema
 	initializers.DB.AutoMigrate(&models.User{})
 
+	// Fiber instance
 	app := fiber.New()
 
 	// Middleware
@@ -40,6 +43,7 @@ func main() {
 	routes.PostRoutes(app, postController)
 	routes.UserRoutes(app, userController)
 
+	// Start server
 	err := app.Listen(":4000")
 	if err != nil {
 		panic(err)
