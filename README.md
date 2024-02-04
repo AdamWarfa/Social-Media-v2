@@ -2,8 +2,8 @@
 
 #TODO
 
-- edit posts
 - edit user
+- edit posts
 - refresh on create post
 - verify password
 - navigate on sign in
