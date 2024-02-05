@@ -10,6 +10,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
 )
 
 func init() {
@@ -27,6 +28,7 @@ func main() {
 
 	// Middleware
 	app.Use(cors.New())
+	app.Use(limiter.New())
 
 	// Dependency Injection
 	// Post
