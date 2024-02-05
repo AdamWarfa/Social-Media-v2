@@ -7,6 +7,7 @@ import (
 	"somev2/internal/services"
 	"somev2/internal/utilities"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 )
@@ -21,15 +22,17 @@ type UserController interface {
 
 // ProdUserController is a struct for the UserController
 type ProdUserController struct {
-	service services.UserService
-	logger  *zap.Logger
+	service  services.UserService
+	logger   *zap.Logger
+	validate *validator.Validate
 }
 
 // NewProdUserController is a constructor for the ProdUserController
-func NewProdUserController(service services.UserService) *ProdUserController {
+func NewProdUserController(service services.UserService, validate *validator.Validate) *ProdUserController {
 	return &ProdUserController{
-		service: service,
-		logger:  utilities.NewLogger(),
+		service:  service,
+		logger:   utilities.NewLogger(),
+		validate: validate,
 	}
 }
 
@@ -50,7 +53,7 @@ func (uc *ProdUserController) GetUser(c *fiber.Ctx) error {
 
 	user, err := uc.service.GetUser(id)
 	if err != nil {
-		uc.logger.Error("Failed to fetch user (controller)", zap.Error(err))
+		uc.logger.Error("Failed to fetch user (controller)", zap.String("id", id), zap.Error(err))
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch user"})
 	}
 
@@ -66,13 +69,16 @@ func (uc *ProdUserController) SaveUser(c *fiber.Ctx) error {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid JSON"})
 	}
 
+	if err := uc.validate.Struct(body); err != nil {
+		uc.logger.Error("Validation error on register user (controller)", zap.Error(err))
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
 	user, err := uc.service.SaveUser(body)
 	if err != nil {
 		uc.logger.Error("Failed to save user in database (controller)", zap.Error(err))
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save user"})
 	}
-
-	fmt.Printf("User %s saved in DB", user.Email)
 
 	uc.logger.Info("User saved in database (controller)", zap.String("email", user.Email))
 	return c.Status(http.StatusOK).JSON(fiber.Map{"user": user})
@@ -85,13 +91,18 @@ func (uc *ProdUserController) UpdateUser(c *fiber.Ctx) error {
 	var body models.User
 
 	if err := c.BodyParser(&body); err != nil {
-		uc.logger.Error("Invalid JSON on update user (controller)", zap.Error(err))
+		uc.logger.Error("Invalid JSON on update user (controller)", zap.String("id", id), zap.Error(err))
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid JSON"})
+	}
+
+	if err := uc.validate.Struct(body); err != nil {
+		uc.logger.Error("Validation error on update user (controller)", zap.String("id", id), zap.Error(err))
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	user, err := uc.service.UpdateUser(id, body)
 	if err != nil {
-		uc.logger.Error("Failed to update user in database (controller)", zap.Error(err))
+		uc.logger.Error("Failed to update user in database (controller)", zap.String("id", id), zap.Error(err))
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to update user"})
 	}
 

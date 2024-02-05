@@ -6,6 +6,7 @@ import (
 	"somev2/internal/services"
 	"somev2/internal/utilities"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -23,15 +24,17 @@ type PostController interface {
 
 // ProdPostController is a struct for the PostController
 type ProdPostController struct {
-	service services.PostService
-	logger  *zap.Logger
+	service  services.PostService
+	logger   *zap.Logger
+	validate *validator.Validate
 }
 
 // NewProdPostController is a constructor for the ProdPostController
-func NewProdPostController(service services.PostService) *ProdPostController {
+func NewProdPostController(service services.PostService, validate *validator.Validate) *ProdPostController {
 	return &ProdPostController{
-		service: service,
-		logger:  utilities.NewLogger(),
+		service:  service,
+		logger:   utilities.NewLogger(),
+		validate: validate,
 	}
 }
 
@@ -52,7 +55,7 @@ func (pc *ProdPostController) GetPost(c *fiber.Ctx) error {
 
 	post, err := pc.service.GetPost(id)
 	if err != nil {
-		pc.logger.Error("Failed to fetch post (controller)", zap.Error(err))
+		pc.logger.Error("Failed to fetch post (controller)", zap.String("id", id), zap.Error(err))
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch post"})
 	}
 
@@ -66,7 +69,7 @@ func (pc *ProdPostController) GetPostsByAuthor(c *fiber.Ctx) error {
 	posts, err := pc.service.GetPostsByAuthor(id)
 
 	if err != nil {
-		pc.logger.Error("Failed to fetch posts (controller)", zap.Error(err))
+		pc.logger.Error("Failed to fetch posts (controller)", zap.String("id", id), zap.Error(err))
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch posts"})
 	}
 
@@ -80,6 +83,11 @@ func (pc *ProdPostController) CreatePost(c *fiber.Ctx) error {
 	if err := c.BodyParser(&body); err != nil {
 		pc.logger.Error("Invalid JSON", zap.Error(err))
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid JSON"})
+	}
+
+	if err := pc.validate.Struct(body); err != nil {
+		pc.logger.Error("Validation error on create post (controller)", zap.Error(err))
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	newUUID := uuid.New()
@@ -103,13 +111,18 @@ func (pc *ProdPostController) LikePost(c *fiber.Ctx) error {
 
 	post, err := pc.service.GetPost(id)
 	if err != nil {
-		pc.logger.Error("Failed to fetch liked post (controller)", zap.Error(err))
+		pc.logger.Error("Failed to fetch liked post (controller)", zap.String("id", id), zap.Error(err))
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch post"})
+	}
+
+	if err := pc.validate.Struct(post); err != nil {
+		pc.logger.Error("Validation error on like post (controller)", zap.String("id", id), zap.Error(err))
+		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	post, err = pc.service.LikePost(id, &post)
 	if err != nil {
-		pc.logger.Error("Failed to like post (controller)", zap.Error(err))
+		pc.logger.Error("Failed to like post (controller)", zap.String("id", id), zap.Error(err))
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to like post"})
 	}
 
@@ -123,7 +136,7 @@ func (pc *ProdPostController) DeletePost(c *fiber.Ctx) error {
 
 	err := pc.service.DeletePost(id)
 	if err != nil {
-		pc.logger.Error("Failed to delete post (controller)", zap.Error(err))
+		pc.logger.Error("Failed to delete post (controller)", zap.String("id", id), zap.Error(err))
 		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to delete post"})
 	}
 
