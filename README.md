@@ -1,7 +1,6 @@
 # Social-Media-v2
 
-#TODO
-
+### TODO
 - edit user
 - edit posts
 - refresh on create post
