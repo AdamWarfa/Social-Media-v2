@@ -112,7 +112,7 @@ func (pc *ProdPostController) LikePost(c *fiber.Ctx) error {
 	post, err := pc.service.GetPost(id)
 	if err != nil {
 		pc.logger.Error("Failed to fetch liked post (controller)", zap.String("id", id), zap.Error(err))
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch post"})
+		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Post not found"})
 	}
 
 	if err := pc.validate.Struct(post); err != nil {

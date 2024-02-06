@@ -7,6 +7,7 @@ import (
 	"somev2/internal/repositories"
 	"somev2/internal/routes"
 	"somev2/internal/services"
+	"somev2/internal/utilities"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -47,9 +48,16 @@ func main() {
 	routes.PostRoutes(app, postController)
 	routes.UserRoutes(app, userController)
 
-	// Start server
-	err := app.Listen(":4000")
-	if err != nil {
-		panic(err)
-	}
+	// Start server in a goroutine
+	go func() {
+		// Start server
+		err := app.Listen(":4000")
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	// Graceful shutdown
+	utilities.AwaitSignal(app)
+
 }
