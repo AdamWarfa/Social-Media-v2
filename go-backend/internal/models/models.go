@@ -17,3 +17,27 @@ type User struct {
 	Avatar    string `json:"avatar"`
 	Followers int    `json:"followers" validate:"gte=0"`
 }
+
+type NbaTeam struct {
+	Id           int    `json:"id" gorm:"primaryKey"`
+	Abbreviation string `json:"abbreviation"`
+	City         string `json:"city"`
+	Conference   string `json:"conference"`
+	Division     string `json:"division"`
+	FullName     string `json:"full_name"`
+	Name         string `json:"name"`
+}
+
+type NbaGame struct {
+	Id               int     `json:"id" gorm:"primaryKey"`
+	Date             string  `json:"date"`
+	HomeTeam         NbaTeam `json:"home_team"`
+	HomeTeamScore    int     `json:"home_team_score"`
+	Period           int     `json:"period"`
+	Postseason       bool    `json:"postseason"`
+	Season           int     `json:"season"`
+	Status           string  `json:"status"`
+	Time             string  `json:"time"`
+	VisitorTeam      NbaTeam `json:"visitor_team"`
+	VisitorTeamScore int     `json:"visitor_team_score"`
+}

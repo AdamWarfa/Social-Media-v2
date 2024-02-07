@@ -15,6 +15,7 @@ import (
 )
 
 func init() {
+
 	// Load environment variables
 	initializers.LoadEnv()
 	initializers.ConnectDB()
@@ -47,6 +48,7 @@ func main() {
 	// Routes
 	routes.PostRoutes(app, postController)
 	routes.UserRoutes(app, userController)
+	routes.NbaRoutes(app)
 
 	// Start server in a goroutine
 	go func() {
