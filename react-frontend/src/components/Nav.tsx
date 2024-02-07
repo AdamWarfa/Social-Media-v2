@@ -116,6 +116,9 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
                   </NavLink>
                   {signUpLink}
                   {loginLink}
+                  <NavLink to="/nbagames" className={currentPage == "nbagames" ? currentPageClass : otherPageClass}>
+                    <a href="#">NBA Games</a>
+                  </NavLink>
                 </div>
               </div>
             </div>

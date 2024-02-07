@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
+import NbaGamesPage from "./pages/NbaGamesPage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { useState, useEffect } from "react";
@@ -48,6 +49,7 @@ function App() {
     <Routes>
       <Route path="/" element={<HomePage loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
       <Route path="/profile/:id" element={<ProfilePage loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
+      <Route path="/nbagames" element={<NbaGamesPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
       <Route path="/login" element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
       <Route path="/signup" element={<Signup loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
       <Route path="*" element={<HomePage loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
