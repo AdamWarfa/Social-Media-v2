@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { auth } from "../api/firebase";
 import { signOut } from "firebase/auth";
 import { getAuthor } from "../api/get";
+import AuthStatus from "../security/AuthStatus";
 
 interface HeaderProps {
   loggedIn: boolean;
@@ -61,16 +62,6 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
     </NavLink>
   );
 
-  const loginLink = loggedIn ? (
-    <NavLink to="/login" onClick={handleSignOut} className={currentPage == "login" ? currentPageClass : otherPageClass}>
-      <a href="#">Log-Out</a>
-    </NavLink>
-  ) : (
-    <NavLink to="/login" className={currentPage == "login" ? currentPageClass : otherPageClass}>
-      <a href="#">Log-In</a>
-    </NavLink>
-  );
-
   return (
     <>
       <nav className="w-full fixed bg-black-950">
@@ -115,7 +106,7 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
                     <a href="#">Front Page</a>
                   </NavLink>
                   {signUpLink}
-                  {loginLink}
+                  <AuthStatus currentPage={currentPage} />
                   <NavLink to="/nbagames" className={currentPage == "nbagames" ? currentPageClass : otherPageClass}>
                     <a href="#">NBA Games</a>
                   </NavLink>
