@@ -13,23 +13,26 @@ import (
 )
 
 // UserController is a contract for the UserController
-type UserController interface {
+type UserControllerI interface {
 	GetUsers(c *fiber.Ctx) error
 	GetUser(c *fiber.Ctx) error
-	SaveUser(c *fiber.Ctx) error
+	Register(c *fiber.Ctx) error
 	UpdateUser(c *fiber.Ctx) error
+	Login(c *fiber.Ctx) error
+	Logout(c *fiber.Ctx) error
 }
 
-// ProdUserController is a struct for the UserController
-type ProdUserController struct {
-	service  services.UserService
+// UserController is a struct for the UserController
+type UserController struct {
+	service  services.UserServiceI
 	logger   *zap.Logger
 	validate *validator.Validate
+	UserControllerI
 }
 
-// NewProdUserController is a constructor for the ProdUserController
-func NewProdUserController(service services.UserService, validate *validator.Validate) *ProdUserController {
-	return &ProdUserController{
+// NewProdUserController is a constructor for the UserController
+func NewUserController(service services.UserServiceI, validate *validator.Validate) *UserController {
+	return &UserController{
 		service:  service,
 		logger:   utilities.NewLogger(),
 		validate: validate,
@@ -37,7 +40,7 @@ func NewProdUserController(service services.UserService, validate *validator.Val
 }
 
 // GetUsers is a method to get all users
-func (uc *ProdUserController) GetUsers(c *fiber.Ctx) error {
+func (uc *UserController) GetUsers(c *fiber.Ctx) error {
 	users, err := uc.service.GetUsers()
 	if err != nil {
 		uc.logger.Error("Failed to fetch users (controller)", zap.Error(err))
@@ -48,7 +51,7 @@ func (uc *ProdUserController) GetUsers(c *fiber.Ctx) error {
 }
 
 // GetUser is a method to get a user by id
-func (uc *ProdUserController) GetUser(c *fiber.Ctx) error {
+func (uc *UserController) GetUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	user, err := uc.service.GetUser(id)
@@ -60,32 +63,38 @@ func (uc *ProdUserController) GetUser(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(user)
 }
 
-// SaveUser is a method to save a user in the database
-func (uc *ProdUserController) SaveUser(c *fiber.Ctx) error {
-	var body models.User
+func (uc *UserController) Register(c *fiber.Ctx) error {
+	var req models.RegisterRequest
 
-	if err := c.BodyParser(&body); err != nil {
-		uc.logger.Error("Invalid JSON on register user (controller)", zap.Error(err))
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": "Invalid JSON"})
+	if err := c.BodyParser(&req); err != nil {
+		uc.logger.Error("Error parsing register request body", zap.Error(err))
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request format",
+		})
 	}
 
-	if err := uc.validate.Struct(body); err != nil {
-		uc.logger.Error("Validation error on register user (controller)", zap.Error(err))
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	if err := uc.validate.Struct(req); err != nil {
+		uc.logger.Error("Error validating register request", zap.Error(err))
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err.Error(),
+		})
 	}
 
-	user, err := uc.service.SaveUser(body)
+	_, err := uc.service.RegisterUser(req.Username, req.Email, req.Password, req.Avatar)
 	if err != nil {
-		uc.logger.Error("Failed to save user in database (controller)", zap.Error(err))
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to save user"})
+		uc.logger.Error("Error registering user", zap.Error(err))
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err.Error(),
+		})
 	}
 
-	uc.logger.Info("User saved in database (controller)", zap.String("email", user.Email))
-	return c.Status(http.StatusOK).JSON(fiber.Map{"user": user})
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"message": "User registered successfully!",
+	})
 }
 
 // UpdateUser is a method to update a user in the database
-func (uc *ProdUserController) UpdateUser(c *fiber.Ctx) error {
+func (uc *UserController) UpdateUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	var body models.User
@@ -110,4 +119,40 @@ func (uc *ProdUserController) UpdateUser(c *fiber.Ctx) error {
 
 	uc.logger.Info("User updated in database (controller)", zap.String("email", user.Email))
 	return c.Status(http.StatusOK).JSON(fiber.Map{"user": user})
+}
+
+func (uc *UserController) Login(c *fiber.Ctx) error {
+	var req models.LoginRequest
+	if err := c.BodyParser(&req); err != nil {
+		uc.logger.Error("Error parsing login request body", zap.Error(err))
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request format",
+		})
+	}
+
+	if err := uc.validate.Struct(req); err != nil {
+		uc.logger.Error("Error validating login request", zap.Error(err))
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	// Verify the user credentials
+	token, username, err := uc.service.VerifyLogin(req.Email, req.Password)
+	if err != nil {
+		// Return an unauthorized status with an error message in JSON
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	// On success, return a JSON response with the user info or token
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"token":    token,
+		"username": username,
+	})
+}
+
+func (uc *UserController) Logout(c *fiber.Ctx) error {
+	return c.SendString("Logged Out")
 }

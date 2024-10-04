@@ -32,19 +32,19 @@ INSERT INTO "users" (
 
 -- Create the posts table
 CREATE TABLE "posts" (
-  "id" VARCHAR(120) NOT NULL PRIMARY KEY,
-  "author" VARCHAR(120),
+  "id" VARCHAR(255) NOT NULL PRIMARY KEY,
+  "authorId" VARCHAR(255), -- Foreign key to users table
   "imgSrc" TEXT,
   "likes" BIGINT,
   "postDate" VARCHAR(200),
   "text" TEXT,
-  FOREIGN KEY ("author") REFERENCES "users"("id")
+  FOREIGN KEY ("authorId") REFERENCES "users"("id")
 );
 
 -- Insert data into the posts table
 INSERT INTO "posts" (
   "id",
-  "author",
+  "authorId",
   "imgSrc",
   "likes",
   "postDate",

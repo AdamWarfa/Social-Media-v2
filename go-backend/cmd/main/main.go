@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+	"os"
 	"somev2/internal/controllers"
 	"somev2/internal/initializers"
 	"somev2/internal/models"
@@ -23,7 +25,18 @@ func init() {
 
 func main() {
 	// Migrate the schema
-	initializers.DB.AutoMigrate(&models.User{})
+	if err := initializers.DB.AutoMigrate(&models.User{}); err != nil {
+		panic(err)
+	}
+
+	// if err := initializers.DB.AutoMigrate(&models.Post{}); err != nil {
+	// 	panic(err)
+	// }
+
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		log.Fatal("JWT_SECRET environment variable not set")
+	}
 
 	// Fiber instance
 	app := fiber.New()
@@ -36,18 +49,18 @@ func main() {
 
 	// Dependency Injection
 	// Post
-	postRepo := repositories.NewProdPostRepository(initializers.DB)
-	postService := services.NewProdPostService(postRepo)
+	postRepo := repositories.NewPostRepository(initializers.DB)
+	postService := services.NewPostService(postRepo)
 	postController := controllers.NewProdPostController(postService, v)
 
 	// User
-	userRepo := repositories.NewProdUserRepository(initializers.DB)
-	userService := services.NewProdUserService(userRepo)
-	userController := controllers.NewProdUserController(userService, v)
+	userRepo := repositories.NewUserRepository(initializers.DB)
+	userService := services.NewUserService(userRepo)
+	userController := controllers.NewUserController(userService, v)
 
 	// Routes
 	routes.PostRoutes(app, postController)
-	routes.UserRoutes(app, userController)
+	routes.UserRoutes(app, userController, jwtSecret)
 	routes.NbaRoutes(app)
 
 	// Start server in a goroutine

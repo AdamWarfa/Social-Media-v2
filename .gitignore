@@ -22,3 +22,5 @@ go.work
 .vscode
 node_modules
 .env
+
+.idea

@@ -1,9 +1,9 @@
 package repositories
 
 type MockPostRepository struct {
-	PostRepository
+	PostRepositoryI
 }
 
-func NewMockPostRepository() PostRepository {
+func NewMockPostRepository() PostRepositoryI {
 	return &MockPostRepository{}
 }

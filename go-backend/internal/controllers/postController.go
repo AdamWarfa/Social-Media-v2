@@ -24,13 +24,13 @@ type PostController interface {
 
 // ProdPostController is a struct for the PostController
 type ProdPostController struct {
-	service  services.PostService
+	service  services.PostServiceI
 	logger   *zap.Logger
 	validate *validator.Validate
 }
 
 // NewProdPostController is a constructor for the ProdPostController
-func NewProdPostController(service services.PostService, validate *validator.Validate) *ProdPostController {
+func NewProdPostController(service services.PostServiceI, validate *validator.Validate) *ProdPostController {
 	return &ProdPostController{
 		service:  service,
 		logger:   utilities.NewLogger(),

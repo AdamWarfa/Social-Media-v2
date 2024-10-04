@@ -9,7 +9,7 @@ import (
 )
 
 // PostService is a contract for the PostService
-type PostService interface {
+type PostServiceI interface {
 	GetPosts() ([]models.Post, error)
 	GetPost(id string) (models.Post, error)
 	GetPostsByAuthor(id string) ([]models.Post, error)
@@ -19,38 +19,38 @@ type PostService interface {
 }
 
 // ProdPostService is a struct for the PostService
-type ProdPostService struct {
-	repo   repositories.PostRepository
+type PostService struct {
+	repo   repositories.PostRepositoryI
 	logger *zap.Logger
 }
 
-// NewProdPostService is a constructor for the ProdPostService
-func NewProdPostService(repo repositories.PostRepository) *ProdPostService {
-	return &ProdPostService{
+// NewProdPostService is a constructor for the PostService
+func NewPostService(repo repositories.PostRepositoryI) *PostService {
+	return &PostService{
 		repo:   repo,
 		logger: utilities.NewLogger(),
 	}
 }
 
 // GetPosts is a method to get all posts
-func (ps *ProdPostService) GetPosts() ([]models.Post, error) {
+func (ps *PostService) GetPosts() ([]models.Post, error) {
 	return ps.repo.GetPosts()
 }
 
 // GetPost is a method to get a post by id
-func (ps *ProdPostService) GetPost(id string) (models.Post, error) {
+func (ps *PostService) GetPost(id string) (models.Post, error) {
 	return ps.repo.GetPost(id)
 }
 
-func (ps *ProdPostService) GetPostsByAuthor(id string) ([]models.Post, error) {
+func (ps *PostService) GetPostsByAuthor(id string) ([]models.Post, error) {
 	return ps.repo.GetPostsByAuthor(id)
 }
 
-func (ps *ProdPostService) CreatePost(post models.Post) (models.Post, error) {
+func (ps *PostService) CreatePost(post models.Post) (models.Post, error) {
 	return ps.repo.CreatePost(post)
 }
 
-func (ps *ProdPostService) LikePost(id string, post *models.Post) (models.Post, error) {
+func (ps *PostService) LikePost(id string, post *models.Post) (models.Post, error) {
 
 	post.Likes = post.Likes + 1
 
@@ -63,6 +63,6 @@ func (ps *ProdPostService) LikePost(id string, post *models.Post) (models.Post, 
 	return likedPost, nil
 }
 
-func (ps *ProdPostService) DeletePost(id string) error {
+func (ps *PostService) DeletePost(id string) error {
 	return ps.repo.DeletePost(id)
 }

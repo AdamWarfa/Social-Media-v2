@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type PostRepository interface {
+type PostRepositoryI interface {
 	GetPosts() ([]models.Post, error)
 	GetPost(id string) (models.Post, error)
 	GetPostsByAuthor(id string) ([]models.Post, error)
@@ -17,20 +17,20 @@ type PostRepository interface {
 	DeletePost(id string) error
 }
 
-type ProdPostRepository struct {
+type PostRepository struct {
 	db     *gorm.DB
 	logger *zap.Logger
-	PostRepository
+	PostRepositoryI
 }
 
-func NewProdPostRepository(db *gorm.DB) *ProdPostRepository {
-	return &ProdPostRepository{
+func NewPostRepository(db *gorm.DB) *PostRepository {
+	return &PostRepository{
 		db:     db,
 		logger: utilities.NewLogger(),
 	}
 }
 
-func (pr *ProdPostRepository) GetPosts() ([]models.Post, error) {
+func (pr *PostRepository) GetPosts() ([]models.Post, error) {
 	var posts []models.Post
 
 	result := pr.db.Find(&posts)
@@ -43,7 +43,7 @@ func (pr *ProdPostRepository) GetPosts() ([]models.Post, error) {
 	return posts, nil
 }
 
-func (pr *ProdPostRepository) GetPost(id string) (models.Post, error) {
+func (pr *PostRepository) GetPost(id string) (models.Post, error) {
 	var post models.Post
 
 	if err := pr.db.Where("id = ?", id).First(&post).Error; err != nil {
@@ -53,7 +53,7 @@ func (pr *ProdPostRepository) GetPost(id string) (models.Post, error) {
 	return post, nil
 }
 
-func (pr *ProdPostRepository) GetPostsByAuthor(id string) ([]models.Post, error) {
+func (pr *PostRepository) GetPostsByAuthor(id string) ([]models.Post, error) {
 	var posts []models.Post
 
 	result := pr.db.Where("author = ?", id).Find(&posts)
@@ -66,7 +66,7 @@ func (pr *ProdPostRepository) GetPostsByAuthor(id string) ([]models.Post, error)
 	return posts, nil
 }
 
-func (pr *ProdPostRepository) CreatePost(post models.Post) (models.Post, error) {
+func (pr *PostRepository) CreatePost(post models.Post) (models.Post, error) {
 	result := pr.db.Create(&post)
 
 	if result.Error != nil {
@@ -78,7 +78,7 @@ func (pr *ProdPostRepository) CreatePost(post models.Post) (models.Post, error) 
 	return post, nil
 }
 
-func (pr *ProdPostRepository) LikePost(id string, post *models.Post) (models.Post, error) {
+func (pr *PostRepository) LikePost(id string, post *models.Post) (models.Post, error) {
 	result := pr.db.Save(&post)
 
 	if result.Error != nil {
@@ -90,7 +90,7 @@ func (pr *ProdPostRepository) LikePost(id string, post *models.Post) (models.Pos
 	return *post, nil
 }
 
-func (pr *ProdPostRepository) DeletePost(id string) error {
+func (pr *PostRepository) DeletePost(id string) error {
 	result := pr.db.Where("id = ?", id).Delete(&models.Post{})
 
 	if result.Error != nil {
