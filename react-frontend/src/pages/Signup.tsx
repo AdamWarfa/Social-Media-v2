@@ -1,6 +1,5 @@
 import { useEffect } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../api/firebase";
+
 import { NavLink } from "react-router-dom";
 import LoginAttempt from "../models/loginValues";
 import { postUser } from "../api/createUser";
@@ -15,48 +14,31 @@ interface LoginProps {
   setUserId: (value: string) => void;
 }
 
+interface UserResponse {
+  token: string;
+  usernname: string;
+}
+
 export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: LoginProps) {
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setLoggedIn(true);
-        setUserId(user.uid);
-        console.log(user.email, " is logged in");
-        console.log(user.uid);
-      } else {
-        setLoggedIn(false);
-        setUserId("");
-        console.log("User is logged out");
-      }
-    });
-    return unsubscribe;
-  }, []);
+  useEffect(() => {}, []);
 
   const handleSignUp = (loginAttempt: LoginAttempt) => {
-    createUserWithEmailAndPassword(auth, loginAttempt.email, loginAttempt.password)
-      .then((response) => {
-        const user = response.user;
-        console.log(user.email, " is registered");
+    // Add user to database
+    const newUser: AuthorType = {
+      id: "",
+      email: loginAttempt.email,
+      username: loginAttempt.username,
+      avatar: loginAttempt.avatar,
+      password: loginAttempt.password,
+      followers: 0,
+    };
 
-        // Add user to database
-        const newUser: AuthorType = {
-          id: user.uid,
-          email: loginAttempt.email,
-          username: loginAttempt.username,
-          avatar: loginAttempt.avatar,
-          password: "secret",
-          followers: 0,
-        };
-
-        postUser(newUser);
-
-        return user.uid;
-      })
-      .then((userId) => {
+    postUser(newUser)
+      .then((response: UserResponse) => {
         setLoggedIn(true);
-        setUserId(userId);
+        setUserId(response.usernname);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         alert(error);
       });
   };
@@ -92,6 +74,7 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
               placeholder="Type Email..."
               required
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black-800 dark:border-black-600 dark:placeholder-black-300 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              autoComplete="email"
             />
           </div>
           <div className="mb-5">
@@ -105,6 +88,7 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
               placeholder="Choose Username.."
               required
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black-800 dark:border-black-600 dark:placeholder-black-300 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              autoComplete="username"
             />
           </div>
           <div className="mb-5">
@@ -118,6 +102,7 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
               placeholder="Choose Password..."
               required
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black-800 dark:border-black-600 dark:placeholder-black-300 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              autoComplete="current-password"
             />
           </div>
           <div className="mb-5">

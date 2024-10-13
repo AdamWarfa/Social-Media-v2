@@ -1,11 +1,12 @@
 import { API_URL } from "../settings.ts";
 import { handleHttpErrors } from "./fetchUtils.ts";
-const LOGIN_URL = API_URL + "/api/auth/login";
+const LOGIN_URL = API_URL + "/users/login";
 
-export type User = { username: string; password: string; roles?: string[] };
+export type User = { id: string; username: string; password: string; roles?: string[] };
 
 interface LoginResponse {
   username: string;
+  id: string;
   token: string;
   roles: Array<string>;
 }

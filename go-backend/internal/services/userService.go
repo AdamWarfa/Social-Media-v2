@@ -16,7 +16,7 @@ type UserServiceI interface {
 	RegisterUser(username, email, password, avatar string) (*models.User, error)
 	UpdateUser(id string, user models.User) (models.User, error)
 	DeleteUser(username string) (string, error)
-	VerifyLogin(email, password string) (string, string, error)
+	VerifyLogin(email, password string) (string, string, string, error)
 }
 
 type UserService struct {
@@ -74,24 +74,24 @@ func (us *UserService) DeleteUser(username string) (string, error) {
 	return username + " has been deleted", nil
 }
 
-func (us *UserService) VerifyLogin(email, password string) (string, string, error) {
+func (us *UserService) VerifyLogin(email, password string) (string, string, string, error) {
 	user, err := us.repo.FindByEmail(email)
 	if err != nil {
-		us.logger.Error("Failed to find user by username", zap.Error(err))
-		return "", "", errors.New("internal server error")
+		us.logger.Error("Failed to find user by email", zap.Error(err))
+		return "", "", "", errors.New("internal server error")
 	}
 
 	if err := security.ComparePasswords(user.Password, password); err != nil {
 		us.logger.Error("Failed to compare passwords", zap.Error(err))
-		return "", "", errors.New("internal server error")
+		return "", "", "", errors.New("internal server error")
 	}
 
 	token, err := security.GenerateJWT(user.Id, user.Username)
 	if err != nil {
 		us.logger.Error("Failed to generate JWT token", zap.Error(err))
-		return "", "", errors.New("could not generate token")
+		return "", "", "", errors.New("could not generate token")
 	}
 
-	return token, user.Username, nil
+	return token, user.Username, user.Id, nil
 
 }

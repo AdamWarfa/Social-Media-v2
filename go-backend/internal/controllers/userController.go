@@ -138,7 +138,7 @@ func (uc *UserController) Login(c *fiber.Ctx) error {
 	}
 
 	// Verify the user credentials
-	token, username, err := uc.service.VerifyLogin(req.Email, req.Password)
+	token, username, id, err := uc.service.VerifyLogin(req.Email, req.Password)
 	if err != nil {
 		// Return an unauthorized status with an error message in JSON
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
@@ -150,6 +150,7 @@ func (uc *UserController) Login(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"token":    token,
 		"username": username,
+		"id":       id,
 	})
 }
 

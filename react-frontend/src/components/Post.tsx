@@ -8,7 +8,6 @@ import { deletePost } from "../api/deletePost";
 
 interface PostProps {
   post: PostType;
-
 }
 
 export default function Post({ post }: PostProps) {
@@ -18,7 +17,7 @@ export default function Post({ post }: PostProps) {
 
   useEffect(() => {
     function findAuthor() {
-      getAuthor(post.author).then((data) => {
+      getAuthor(post.authorId).then((data) => {
         setAuthor(data);
       });
     }
@@ -85,11 +84,17 @@ export default function Post({ post }: PostProps) {
         <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabIndex={-1} id="user-menu-item-0">
           Edit Post
         </a>
-        <a onClick={() => {
-          deletePost(post.id);
-          // UpdateGrid();
-        }}
-         href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabIndex={-1} id="user-menu-item-1">
+        <a
+          onClick={() => {
+            deletePost(post.id);
+            // UpdateGrid();
+          }}
+          href="#"
+          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          role="menuitem"
+          tabIndex={-1}
+          id="user-menu-item-1"
+        >
           Delete Post
         </a>
       </div>

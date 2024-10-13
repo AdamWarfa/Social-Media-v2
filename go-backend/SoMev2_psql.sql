@@ -33,21 +33,21 @@ INSERT INTO "users" (
 -- Create the posts table
 CREATE TABLE "posts" (
   "id" VARCHAR(255) NOT NULL PRIMARY KEY,
-  "authorId" VARCHAR(255), -- Foreign key to users table
-  "imgSrc" TEXT,
+  "author_id" VARCHAR(255), -- Foreign key to users table
+  "img_src" TEXT,
   "likes" BIGINT,
-  "postDate" VARCHAR(200),
+  "post_date" VARCHAR(200),
   "text" TEXT,
-  FOREIGN KEY ("authorId") REFERENCES "users"("id")
+  FOREIGN KEY ("author_id") REFERENCES "users"("id")
 );
 
 -- Insert data into the posts table
 INSERT INTO "posts" (
   "id",
-  "authorId",
-  "imgSrc",
+  "author_id",
+  "img_src",
   "likes",
-  "postDate",
+  "post_date",
   "text"
 ) VALUES
 ('-NYJrGiacxi51YU0wTuD','-NYJioP0TPNf8sam-r_m','https://cdn.vox-cdn.com/thumbor/E-WhIDSz73yOwp0hes1YYtSk4Yc=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/15982917/usa_today_12406932.jpg',3,'2023-06-19T18:14:00.705Z','Jimmy buckets is him!!'),

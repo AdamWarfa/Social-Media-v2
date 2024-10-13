@@ -4,7 +4,6 @@ import (
 	"somev2/internal/controllers"
 
 	"github.com/gofiber/fiber/v2"
-	jwtware "github.com/gofiber/jwt/v3"
 )
 
 func UserRoutes(app *fiber.App, uc controllers.UserControllerI, jwtSecret string) {
@@ -19,9 +18,9 @@ func UserRoutes(app *fiber.App, uc controllers.UserControllerI, jwtSecret string
 
 	users.Post("/login", uc.Login)
 
-	app.Use("/api", jwtware.New(jwtware.Config{
-		SigningKey: []byte(jwtSecret),
-	}))
+	// app.Use("/users", jwtware.New(jwtware.Config{
+	// 	SigningKey: []byte(jwtSecret),
+	// }))
 
 	users.Put("/:id", uc.UpdateUser)
 }

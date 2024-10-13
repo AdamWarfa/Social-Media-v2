@@ -1,6 +1,6 @@
 interface PostType {
   id: string;
-  author: string;
+  authorId: string;
   text: string;
   imgSrc: string;
   postDate: string;

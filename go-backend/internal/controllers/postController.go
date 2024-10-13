@@ -92,7 +92,7 @@ func (pc *ProdPostController) CreatePost(c *fiber.Ctx) error {
 
 	newUUID := uuid.New()
 
-	post := models.Post{Id: newUUID.String(), Text: body.Text, Author: body.Author, ImgSrc: body.ImgSrc, Likes: body.Likes, PostDate: body.PostDate}
+	post := models.Post{Id: newUUID.String(), Text: body.Text, ImgSrc: body.ImgSrc, Likes: body.Likes, PostDate: body.PostDate}
 
 	post, err := pc.service.CreatePost(post)
 

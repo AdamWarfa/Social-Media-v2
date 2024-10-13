@@ -56,7 +56,7 @@ func (pr *PostRepository) GetPost(id string) (models.Post, error) {
 func (pr *PostRepository) GetPostsByAuthor(id string) ([]models.Post, error) {
 	var posts []models.Post
 
-	result := pr.db.Where("author = ?", id).Find(&posts)
+	result := pr.db.Where("author_id = ?", id).Find(&posts)
 
 	if result.Error != nil {
 		pr.logger.Error("Failed to fetch posts by author (repo)", zap.Error(result.Error))

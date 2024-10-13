@@ -4,10 +4,9 @@ type Post struct {
 	Id       string `json:"id" gorm:"primaryKey" validate:"required,uuid"`
 	Text     string `json:"text" validate:"required,min=5,max=255"`
 	AuthorID string `json:"authorId" gorm:"column:author_id;not null;index"` // Foreign key to User
-	Author   User   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	ImgSrc   string `json:"imgSrc" gorm:"column:imgSrc"`
+	ImgSrc   string `json:"imgSrc" gorm:"column:img_src"`
 	Likes    int    `json:"likes" validate:"gte=0"`
-	PostDate string `json:"postDate" gorm:"column:postDate"`
+	PostDate string `json:"postDate" gorm:"column:post_date"`
 }
 
 type User struct {

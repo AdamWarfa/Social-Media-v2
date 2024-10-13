@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { auth } from "../api/firebase";
-import { signOut } from "firebase/auth";
 import { getAuthor } from "../api/get";
 import AuthStatus from "../security/AuthStatus";
+import { useAuth } from "../security/AuthProvider";
 
 interface HeaderProps {
   loggedIn: boolean;
@@ -18,28 +17,13 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
 
   const [IsDropdown, setIsDropdown] = useState(false);
 
+  const auth = useAuth();
+
   useEffect(() => {
-    if (loggedIn) {
-      getAuthor(userId).then((response) => {
-        setAvatar(response.avatar);
-      });
-    }
-  }, [loggedIn]);
-
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-        setLoggedIn(false);
-        setUserId("");
-
-        console.log("Sign-out successful.");
-      })
-      .catch((error) => {
-        // An error happened.
-        console.log(error);
-      });
-  };
+    getAuthor(userId).then((response) => {
+      setAvatar(response.avatar);
+    });
+  }, [userId]);
 
   const dropdownClass = "absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition ease-out duration-100";
   const closeDropdownClass = dropdownClass + "transform opacity-0 scale-95";
@@ -97,7 +81,7 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
             </div>
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
               <div className="flex flex-shrink-0 items-center">
-                <img className="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" />
+                <img className="h-8 w-auto" src="https://cdn-images-1.medium.com/max/1600/1*u4KnqEio0EmeHotVtiwMTA.png" alt="Your Company" />
               </div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
@@ -127,7 +111,7 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
               </button>
 
               {/* <!-- Profile dropdown --> */}
-              {loggedIn && (
+              {auth.isLoggedIn() && (
                 <div className="relative ml-3">
                   <div>
                     <button
@@ -143,16 +127,6 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
                     </button>
                   </div>
 
-                  {/* <!--
-            Dropdown menu, show/hide based on menu state.
-
-            Entering: "transition ease-out duration-100"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95"
-          --> */}
                   <div className={IsDropdown ? openDropdownClass : closeDropdownClass} role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex={-1}>
                     {/* <!-- Active: "bg-gray-100", Not Active: "" --> */}
                     <NavLink to={`/profile/${userId}`} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex={-1} id="user-menu-item-0">
@@ -163,7 +137,7 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
                     </a>
                     <a
                       onClick={() => {
-                        handleSignOut();
+                        auth.signOut();
                         toggleDropdown();
                       }}
                       href="#"

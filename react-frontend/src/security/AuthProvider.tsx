@@ -23,6 +23,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       setUsername(user.username);
       localStorage.setItem("username", user.username);
       localStorage.setItem("roles", JSON.stringify(user.roles));
+      localStorage.setItem("userId", user.id);
       localStorage.setItem("token", user.token);
       return user;
     });
@@ -34,6 +35,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("roles");
+    localStorage.removeItem("userId");
   };
 
   function isLoggedIn() {

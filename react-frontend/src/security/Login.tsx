@@ -2,10 +2,17 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 import { User } from "../services/authFacade.ts";
+import { NavLink } from "react-router-dom";
+import Nav from "../components/Nav.tsx";
 
-import "./login.css";
+interface LoginProps {
+  loggedIn: boolean;
+  setLoggedIn: (value: boolean) => void;
+  userId: string;
+  setUserId: (value: string) => void;
+}
 
-const Login = () => {
+const Login = ({ loggedIn, setLoggedIn, userId, setUserId }: LoginProps) => {
   const [user, setUser] = useState({ email: "", password: "" });
 
   const navigate = useNavigate();
@@ -28,31 +35,66 @@ const Login = () => {
     // return;
     auth
       .signIn(user)
-      .then(() => {
+      .then((res) => {
+        setLoggedIn(true);
+        setUserId(res.id);
         navigate(from, { replace: true });
       })
       .catch((err) => {
         setErr(err);
       });
   }
-
   return (
-    <div className="login-wrapper">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h2>Login</h2>
-        <div className="login-form-group">
-          <label htmlFor="email">Username</label>
-          <input type="text" name="email" value={user.email} onChange={(e) => setUser((prev) => ({ ...prev, username: e.target.value }))} required />
-        </div>
-        <div className="login-form-group">
-          <label htmlFor="password">Password</label>
-          <input type="password" name="password" value={user.password} onChange={(e) => setUser((prev) => ({ ...prev, password: e.target.value }))} required />
-        </div>
-        <button type="submit" className="login-btn">
-          Login
-        </button>
-      </form>
-    </div>
+    <>
+      <Nav loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} currentPage="login" />
+      <div className="login-wrapper" style={{ padding: "1rem" }}>
+        <form className="login-form max-w-sm mx-auto" onSubmit={handleSubmit}>
+          <h2 className="mt-24 mb-4 text-2xl text-center">Login</h2>
+          <div className="login-form-group">
+            <label htmlFor="email block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+            <input
+              type="text"
+              name="email"
+              value={user.email}
+              onChange={(e) => setUser((prev) => ({ ...prev, email: e.target.value }))}
+              required
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black-800 dark:border-black-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              autoComplete="email"
+            />
+          </div>
+          <div className="login-form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              name="password"
+              value={user.password}
+              onChange={(e) => setUser((prev) => ({ ...prev, password: e.target.value }))}
+              required
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black-800 dark:border-black-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              autoComplete="current-password"
+            />
+          </div>
+          <div className="flex items-center h-5">
+            <input
+              id="remember"
+              type="checkbox"
+              value=""
+              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+            />
+          </div>
+
+          <button type="submit" className="login-btn">
+            Login
+          </button>
+        </form>
+        <p className="mt-10 ml-8">
+          Don't have an account?
+          <NavLink to={`/signup`} className="text-blue-400 hover:text-blue-500">
+            <span> Sign up here</span>
+          </NavLink>
+        </p>
+      </div>
+    </>
   );
 };
 
