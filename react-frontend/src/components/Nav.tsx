@@ -12,7 +12,7 @@ interface HeaderProps {
   currentPage: string;
 }
 
-export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentPage }: HeaderProps) {
+export default function Nav({ loggedIn, userId, currentPage }: HeaderProps) {
   const [avatar, setAvatar] = useState("");
 
   const [IsDropdown, setIsDropdown] = useState(false);
@@ -38,11 +38,11 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
 
   const signUpLink = loggedIn ? (
     <NavLink to={`/profile/${userId}`} className={currentPage == "signup/profile" ? currentPageClass : otherPageClass}>
-      <a href="#">Profile</a>
+      Profile
     </NavLink>
   ) : (
     <NavLink to="/signup" className={currentPage == "signup/profile" ? currentPageClass : otherPageClass}>
-      <a href="#">Create Account</a>
+      Create Account
     </NavLink>
   );
 
@@ -87,12 +87,12 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
                 <div className="flex space-x-4">
                   {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
                   <NavLink to="/" className={currentPage == "homepage" ? currentPageClass : otherPageClass}>
-                    <a href="#">Front Page</a>
+                    Front Page
                   </NavLink>
                   {signUpLink}
                   <AuthStatus currentPage={currentPage} />
                   <NavLink to="/nbagames" className={currentPage == "nbagames" ? currentPageClass : otherPageClass}>
-                    <a href="#">NBA Games</a>
+                    NBA Games
                   </NavLink>
                 </div>
               </div>
@@ -130,7 +130,7 @@ export default function Nav({ loggedIn, setLoggedIn, setUserId, userId, currentP
                   <div className={IsDropdown ? openDropdownClass : closeDropdownClass} role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex={-1}>
                     {/* <!-- Active: "bg-gray-100", Not Active: "" --> */}
                     <NavLink to={`/profile/${userId}`} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex={-1} id="user-menu-item-0">
-                      <a href="#">Your Profile</a>
+                      Your Profile
                     </NavLink>
                     <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex={-1} id="user-menu-item-1">
                       Settings
