@@ -8,7 +8,6 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
 
@@ -78,7 +77,7 @@ func (pc *ProdPostController) GetPostsByAuthor(c *fiber.Ctx) error {
 
 // CreatePost is a method to create a post
 func (pc *ProdPostController) CreatePost(c *fiber.Ctx) error {
-	var body models.Post
+	var body models.PostRequest
 
 	if err := c.BodyParser(&body); err != nil {
 		pc.logger.Error("Invalid JSON", zap.Error(err))
@@ -90,11 +89,7 @@ func (pc *ProdPostController) CreatePost(c *fiber.Ctx) error {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	newUUID := uuid.New()
-
-	post := models.Post{Id: newUUID.String(), Text: body.Text, ImgSrc: body.ImgSrc, Likes: body.Likes, PostDate: body.PostDate}
-
-	post, err := pc.service.CreatePost(post)
+	post, err := pc.service.CreatePost(body)
 
 	if err != nil {
 		pc.logger.Error("Failed to create post (controller)", zap.Error(err))

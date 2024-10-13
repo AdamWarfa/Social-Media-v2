@@ -1,4 +1,4 @@
-import PostType from "../models/post";
+import { PostType } from "../models/post";
 
 const endpoint: string = "http://localhost:4000";
 

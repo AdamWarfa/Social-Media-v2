@@ -1,12 +1,14 @@
-import { useAuth } from "./AuthProvider";
 import { NavLink, Link } from "react-router-dom";
+import { AuthContextType } from "./AuthProvider";
 
-export default function AuthStatus({ currentPage }: { currentPage: string }) {
-  const auth = useAuth();
+interface AuthStatusProps {
+  currentPage: string;
+  auth: AuthContextType;
+  currentPageClass: string;
+  otherPageClass: string;
+}
 
-  const currentPageClass = "bg-gray-800 text-white rounded-md px-3 py-2 text-sm font-medium";
-  const otherPageClass = "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium";
-
+export default function AuthStatus({ currentPage, auth, currentPageClass, otherPageClass }: AuthStatusProps) {
   if (!auth.isLoggedIn()) {
     return (
       <NavLink to="/login" className={currentPage == "login" ? currentPageClass : otherPageClass}>

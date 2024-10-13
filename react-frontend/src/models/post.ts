@@ -7,4 +7,10 @@ interface PostType {
   likes: number;
 }
 
-export default PostType;
+interface PostRequest {
+  authorId: string;
+  text: string;
+  imgSrc: string;
+}
+
+export type { PostType, PostRequest };

@@ -5,7 +5,7 @@ import LoginAttempt from "../models/loginValues";
 import { postUser } from "../api/createUser";
 
 import Nav from "../components/Nav";
-import AuthorType from "../models/author";
+import { AuthorType } from "../models/author";
 
 interface LoginProps {
   loggedIn: boolean;
@@ -47,8 +47,16 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
     event.preventDefault();
     const form = event.currentTarget;
 
+    const password = form.signupPassword.value;
+    const password2 = form.signupPassword2.value;
+
+    if (password !== password2) {
+      alert("Passwords do not match");
+      return;
+    }
+
     const loginAttempt = {
-      email: form.signupEmail.value,
+      email: form.signupEmail.value.toLowerCase(),
       username: form.signupUsername.value,
       password: form.signupPassword.value,
       avatar: form.signupAvatar.value,
@@ -92,7 +100,7 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
             />
           </div>
           <div className="mb-5">
-            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            <label htmlFor="signupPassword" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Your password
             </label>
             <input
@@ -100,6 +108,20 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
               name="signupPassword"
               id="signupPassword"
               placeholder="Choose Password..."
+              required
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black-800 dark:border-black-600 dark:placeholder-black-300 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              autoComplete="current-password"
+            />
+          </div>
+          <div className="mb-5">
+            <label htmlFor="signupPassword2" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Your password
+            </label>
+            <input
+              type="password"
+              name="signupPassword2"
+              id="signupPassword2"
+              placeholder="repeat Password..."
               required
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black-800 dark:border-black-600 dark:placeholder-black-300 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               autoComplete="current-password"

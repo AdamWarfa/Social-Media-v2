@@ -12,7 +12,7 @@ interface HeaderProps {
   currentPage: string;
 }
 
-export default function Nav({ loggedIn, userId, currentPage }: HeaderProps) {
+export default function Nav({ userId, currentPage }: HeaderProps) {
   const [avatar, setAvatar] = useState("");
 
   const [IsDropdown, setIsDropdown] = useState(false);
@@ -29,14 +29,14 @@ export default function Nav({ loggedIn, userId, currentPage }: HeaderProps) {
   const closeDropdownClass = dropdownClass + "transform opacity-0 scale-95";
   const openDropdownClass = dropdownClass + "transform opacity-100 scale-100";
 
-  const currentPageClass = "bg-gray-800 text-white rounded-md px-3 py-2 text-sm font-medium";
-  const otherPageClass = "text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium";
+  const currentPageClass = "bg-shark-900 text-white rounded-md px-3 py-2 text-sm font-medium";
+  const otherPageClass = "text-gray-300 hover:bg-shark-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium";
 
   const toggleDropdown = () => {
     setIsDropdown(!IsDropdown);
   };
 
-  const signUpLink = loggedIn ? (
+  const signUpLink = auth.isLoggedIn() ? (
     <NavLink to={`/profile/${userId}`} className={currentPage == "signup/profile" ? currentPageClass : otherPageClass}>
       Profile
     </NavLink>
@@ -48,7 +48,7 @@ export default function Nav({ loggedIn, userId, currentPage }: HeaderProps) {
 
   return (
     <>
-      <nav className="w-full fixed bg-black-950">
+      <nav className="w-full fixed bg-shark-950">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -90,7 +90,7 @@ export default function Nav({ loggedIn, userId, currentPage }: HeaderProps) {
                     Front Page
                   </NavLink>
                   {signUpLink}
-                  <AuthStatus currentPage={currentPage} />
+                  <AuthStatus currentPage={currentPage} auth={auth} currentPageClass={currentPageClass} otherPageClass={otherPageClass} />
                   <NavLink to="/nbagames" className={currentPage == "nbagames" ? currentPageClass : otherPageClass}>
                     NBA Games
                   </NavLink>
@@ -98,7 +98,7 @@ export default function Nav({ loggedIn, userId, currentPage }: HeaderProps) {
               </div>
             </div>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <button type="button" className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+              <button type="button" className="relative rounded-full bg-shark-900 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <span className="absolute -inset-1.5"></span>
                 <span className="sr-only">View notifications</span>
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
@@ -116,7 +116,7 @@ export default function Nav({ loggedIn, userId, currentPage }: HeaderProps) {
                   <div>
                     <button
                       type="button"
-                      className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                      className="relative flex rounded-full bg-shark-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                       id="user-menu-button"
                       aria-expanded="false"
                       aria-haspopup="true"
@@ -159,16 +159,16 @@ export default function Nav({ loggedIn, userId, currentPage }: HeaderProps) {
         <div className="sm:hidden" id="mobile-menu">
           <div className="space-y-1 px-2 pb-3 pt-2">
             {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
-            <a href="#" className="bg-gray-900 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">
+            <a href="#" className="bg-shark-900 text-white block rounded-md px-3 py-2 text-base font-medium" aria-current="page">
               Dashboard
             </a>
-            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">
+            <a href="#" className="text-gray-300 hover:bg-shark-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">
               Team
             </a>
-            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">
+            <a href="#" className="text-gray-300 hover:bg-shark-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">
               Projects
             </a>
-            <a href="#" className="text-gray-300 hover:bg-gray-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">
+            <a href="#" className="text-gray-300 hover:bg-shark-700 hover:text-white block rounded-md px-3 py-2 text-base font-medium">
               Calendar
             </a>
           </div>

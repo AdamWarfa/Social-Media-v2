@@ -4,7 +4,9 @@ import (
 	"somev2/internal/models"
 	"somev2/internal/repositories"
 	"somev2/internal/utilities"
+	"time"
 
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 )
 
@@ -13,7 +15,7 @@ type PostServiceI interface {
 	GetPosts() ([]models.Post, error)
 	GetPost(id string) (models.Post, error)
 	GetPostsByAuthor(id string) ([]models.Post, error)
-	CreatePost(post models.Post) (models.Post, error)
+	CreatePost(PostRequest models.PostRequest) (models.Post, error)
 	LikePost(id string, post *models.Post) (models.Post, error)
 	DeletePost(id string) error
 }
@@ -46,7 +48,15 @@ func (ps *PostService) GetPostsByAuthor(id string) ([]models.Post, error) {
 	return ps.repo.GetPostsByAuthor(id)
 }
 
-func (ps *PostService) CreatePost(post models.Post) (models.Post, error) {
+func (ps *PostService) CreatePost(PostRequest models.PostRequest) (models.Post, error) {
+
+	newUUID := uuid.New()
+	date := time.Now().UTC()
+	// Format to ISO 8601 (RFC 3339)
+	formattedDate := date.Format("2006-01-02T15:04:05.000Z")
+
+	post := models.Post{Id: newUUID.String(), Text: PostRequest.Text, ImgSrc: PostRequest.ImgSrc, AuthorID: PostRequest.AuthorID, Likes: 0, PostDate: formattedDate}
+
 	return ps.repo.CreatePost(post)
 }
 

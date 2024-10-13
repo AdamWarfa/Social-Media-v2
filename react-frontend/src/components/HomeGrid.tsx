@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getPosts } from "../api/get.ts";
-import PostType from "../models/post.ts";
+import { PostType } from "../models/post.ts";
 import Post from "./Post";
 import CreatePost from "./CreatePost.tsx";
 
@@ -36,10 +36,11 @@ export default function HomeGrid({ userId, loggedIn }: HomeGridProps) {
       <div className="py-12 flex items-center justify-center">
         <div className="mt-20 grid grid-cols-1 md:grid-cols-1 xl:grid-cols-1 gap-2">
           <CreatePost loggedIn={loggedIn} userId={userId} />
-          <select className="rounded-lg" name="sortHome" id="sortHome" value={sortOption} onChange={handleSortChange}>
+          <select className="rounded-lg my-2" name="sortHome" id="sortHome" value={sortOption} onChange={handleSortChange}>
             <option value="new">New</option>
             <option value="popular">Popular</option>
           </select>
+
           {postList && postList.map((post) => <Post key={post.id} post={post} />)}
         </div>
       </div>

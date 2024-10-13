@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getPostsByAuthor } from "../api/get.ts";
-import PostType from "../models/post.ts";
+import { PostType } from "../models/post.ts";
 import Post from "./Post";
 
 interface ProfileGridProps {

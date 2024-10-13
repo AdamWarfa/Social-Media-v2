@@ -1,13 +1,16 @@
 import { useState, FormEvent } from "react";
 import { uploadPost } from "../api/createPost";
+import { PostRequest } from "../models/post";
+import { useAuth } from "../security/AuthProvider";
 
 interface CreatePostProps {
   loggedIn: boolean;
   userId: string;
 }
 
-export default function CreatePost({ loggedIn, userId }: CreatePostProps) {
+export default function CreatePost({ userId }: CreatePostProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const auth = useAuth();
 
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
@@ -23,13 +26,10 @@ export default function CreatePost({ loggedIn, userId }: CreatePostProps) {
     // Access form elements
     const form = event.currentTarget;
     // Create post
-    const newPost = {
-      id: Math.random().toString(36),
+    const newPost: PostRequest = {
       text: (form.caption as HTMLTextAreaElement).value,
       imgSrc: (form.imgUrl as HTMLInputElement).value,
-      author: userId,
-      likes: 0,
-      postDate: new Date().toString(),
+      authorId: userId,
     };
 
     uploadPost(newPost);
@@ -39,11 +39,11 @@ export default function CreatePost({ loggedIn, userId }: CreatePostProps) {
 
   return (
     <>
-      {loggedIn && (
+      {auth.isLoggedIn() && (
         <>
           <div className="flex justify-center items-center m-5">
-            <div className="w-20 h-20 p-16 gradient-button transition-transform rounded-full flex justify-center items-center" onClick={handleOpenDialog}>
-              <h2 className="p-0 text-8xl text-slate-800">+</h2>
+            <div className="w-20 h-20 p-16 bg-black-100 transition-transform rounded-xl flex justify-center items-center" onClick={handleOpenDialog}>
+              <h2 className="p-0 text-8xl text-black-950">+</h2>
             </div>
           </div>
         </>

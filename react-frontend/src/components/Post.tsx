@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import PostType from "../models/post";
-import AuthorType from "../models/author";
+import { PostType } from "../models/post";
+import { AuthorType } from "../models/author";
 import { getAuthor } from "../api/get";
 import { likePost } from "../api/likePost";
 import { deletePost } from "../api/deletePost";

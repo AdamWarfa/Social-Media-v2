@@ -6,5 +6,10 @@ interface AuthorType {
   username: string;
   password: string;
 }
+interface UserRequest {
+  email: string;
+  username: string;
+  password: string;
+}
 
-export default AuthorType;
+export type { AuthorType, UserRequest };

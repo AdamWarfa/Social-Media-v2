@@ -1,4 +1,4 @@
-import AuthorType from "../models/author";
+import { AuthorType } from "../models/author";
 
 const endpoint = "http://localhost:4000";
 

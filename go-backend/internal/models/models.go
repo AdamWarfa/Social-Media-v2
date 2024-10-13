@@ -1,12 +1,18 @@
 package models
 
 type Post struct {
-	Id       string `json:"id" gorm:"primaryKey" validate:"required,uuid"`
+	Id       string `json:"id" gorm:"primaryKey" validate:"uuid"`
 	Text     string `json:"text" validate:"required,min=5,max=255"`
 	AuthorID string `json:"authorId" gorm:"column:author_id;not null;index"` // Foreign key to User
 	ImgSrc   string `json:"imgSrc" gorm:"column:img_src"`
 	Likes    int    `json:"likes" validate:"gte=0"`
 	PostDate string `json:"postDate" gorm:"column:post_date"`
+}
+
+type PostRequest struct {
+	Text     string `json:"text" validate:"required,min=5,max=255"`
+	ImgSrc   string `json:"imgSrc" validate:"required,url"`
+	AuthorID string `json:"authorId" validate:"required,uuid"`
 }
 
 type User struct {
