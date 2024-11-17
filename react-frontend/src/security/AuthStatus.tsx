@@ -11,7 +11,7 @@ interface AuthStatusProps {
 export default function AuthStatus({ currentPage, auth, currentPageClass, otherPageClass }: AuthStatusProps) {
   if (!auth.isLoggedIn()) {
     return (
-      <NavLink to="/login" className={currentPage == "login" ? currentPageClass : otherPageClass}>
+      <NavLink to="/login" className={currentPage == "/login" ? currentPageClass : otherPageClass}>
         Login
       </NavLink>
     );

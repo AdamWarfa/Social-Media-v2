@@ -2,7 +2,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../api/firebase";
 import { NavLink } from "react-router-dom";
 import LoginAttempt from "../models/loginValues";
-import Nav from "../components/Nav";
 
 interface LoginProps {
   loggedIn: boolean;
@@ -11,7 +10,7 @@ interface LoginProps {
   setUserId: (value: string) => void;
 }
 
-export default function Login({ loggedIn, setLoggedIn, userId, setUserId }: LoginProps) {
+export default function Login({ setLoggedIn, setUserId }: LoginProps) {
   const handleLogin = (loginAttempt: LoginAttempt) => {
     signInWithEmailAndPassword(auth, loginAttempt.email, loginAttempt.password)
       .then((response) => {
@@ -46,7 +45,6 @@ export default function Login({ loggedIn, setLoggedIn, userId, setUserId }: Logi
 
   return (
     <>
-      <Nav loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} currentPage="login" />
       <div style={{ padding: "1rem" }}>
         <h1 className="mt-24 mb-4 text-2xl text-center">Login</h1>
         <form action="" method="post" onSubmit={handleLoginForm} className="max-w-sm mx-auto">

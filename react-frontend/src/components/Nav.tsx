@@ -37,11 +37,11 @@ export default function Nav({ userId, currentPage }: HeaderProps) {
   };
 
   const signUpLink = auth.isLoggedIn() ? (
-    <NavLink to={`/profile/${userId}`} className={currentPage == "signup/profile" ? currentPageClass : otherPageClass}>
+    <NavLink to={`/profile/${userId}`} className={currentPage == "/profile/:id" ? currentPageClass : otherPageClass}>
       Profile
     </NavLink>
   ) : (
-    <NavLink to="/signup" className={currentPage == "signup/profile" ? currentPageClass : otherPageClass}>
+    <NavLink to="/signup" className={currentPage == "/signup" ? currentPageClass : otherPageClass}>
       Create Account
     </NavLink>
   );
@@ -86,7 +86,7 @@ export default function Nav({ userId, currentPage }: HeaderProps) {
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
                   {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" --> */}
-                  <NavLink to="/" className={currentPage == "homepage" ? currentPageClass : otherPageClass}>
+                  <NavLink to="/" className={currentPage == "/" ? currentPageClass : otherPageClass}>
                     Front Page
                   </NavLink>
                   {signUpLink}

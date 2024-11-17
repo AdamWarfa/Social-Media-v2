@@ -5,24 +5,42 @@ import NbaGamesPage from "./pages/NbaGamesPage";
 import Login from "./security/Login";
 import Signup from "./pages/Signup";
 import Logout from "./security/Logout";
-import { useState } from "react";
+import Nav from "./components/Nav";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+
+type Page = "/" | "/profile/:id" | "/nbagames" | "/login" | "/signup" | "/logout" | "*";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
-  console.log(userId);
+  const [currentPage, setCurrentPage] = useState<Page>(useLocation().pathname as Page);
+
+  const location = useLocation().pathname;
+
+  useEffect(() => {
+    if (location.includes("profile")) {
+      setCurrentPage("/profile/:id");
+    } else {
+      setCurrentPage(location as Page);
+    }
+    console.log("location:", location);
+  }, [location]);
 
   return (
-    <Routes>
-      <Route path="/" element={<HomePage loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
-      <Route path="/profile/:id" element={<ProfilePage loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
-      <Route path="/nbagames" element={<NbaGamesPage loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
-      <Route path="/login" element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
-      <Route path="/signup" element={<Signup loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
-      <Route path="/logout" element={<Logout />} />
+    <>
+      <Nav loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} currentPage={currentPage} />
+      <Routes>
+        <Route path="/" element={<HomePage loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
+        <Route path="/profile/:id" element={<ProfilePage />} />
+        <Route path="/nbagames" element={<NbaGamesPage />} />
+        <Route path="/login" element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
+        <Route path="/signup" element={<Signup loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
+        <Route path="/logout" element={<Logout />} />
 
-      <Route path="*" element={<HomePage loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
-    </Routes>
+        <Route path="*" element={<HomePage loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
+      </Routes>
+    </>
   );
 }
 

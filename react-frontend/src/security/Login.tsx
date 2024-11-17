@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 import { User } from "../services/authFacade.ts";
 import { NavLink } from "react-router-dom";
-import Nav from "../components/Nav.tsx";
 
 interface LoginProps {
   loggedIn: boolean;
@@ -12,7 +11,7 @@ interface LoginProps {
   setUserId: (value: string) => void;
 }
 
-const Login = ({ loggedIn, setLoggedIn, userId, setUserId }: LoginProps) => {
+const Login = ({ setLoggedIn, setUserId }: LoginProps) => {
   const [user, setUser] = useState({ email: "", password: "" });
 
   const navigate = useNavigate();
@@ -46,15 +45,17 @@ const Login = ({ loggedIn, setLoggedIn, userId, setUserId }: LoginProps) => {
   }
   return (
     <>
-      <Nav loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} currentPage="login" />
       <div className="login-wrapper" style={{ padding: "1rem" }}>
         <form className="login-form max-w-sm mx-auto" onSubmit={handleSubmit}>
           <h2 className="mt-24 mb-4 text-2xl text-center">Login</h2>
           <div className="login-form-group">
-            <label htmlFor="email block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Email
+            </label>
             <input
               type="text"
               name="email"
+              id="email"
               value={user.email}
               onChange={(e) => setUser((prev) => ({ ...prev, email: e.target.value }))}
               required
@@ -62,11 +63,15 @@ const Login = ({ loggedIn, setLoggedIn, userId, setUserId }: LoginProps) => {
               autoComplete="email"
             />
           </div>
+          <br />
           <div className="login-form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Password
+            </label>
             <input
               type="password"
               name="password"
+              id="password"
               value={user.password}
               onChange={(e) => setUser((prev) => ({ ...prev, password: e.target.value }))}
               required
@@ -74,6 +79,7 @@ const Login = ({ loggedIn, setLoggedIn, userId, setUserId }: LoginProps) => {
               autoComplete="current-password"
             />
           </div>
+          <br />
           <div className="flex items-center h-5">
             <input
               id="remember"

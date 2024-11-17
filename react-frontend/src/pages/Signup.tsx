@@ -4,7 +4,6 @@ import { NavLink } from "react-router-dom";
 import LoginAttempt from "../models/loginValues";
 import { postUser } from "../api/createUser";
 
-import Nav from "../components/Nav";
 import { AuthorType } from "../models/author";
 
 interface LoginProps {
@@ -19,7 +18,7 @@ interface UserResponse {
   usernname: string;
 }
 
-export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: LoginProps) {
+export default function Signup({ setLoggedIn, setUserId }: LoginProps) {
   useEffect(() => {}, []);
 
   const handleSignUp = (loginAttempt: LoginAttempt) => {
@@ -67,7 +66,6 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
 
   return (
     <>
-      <Nav loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} currentPage="signup/profile" />
       <div className="p-4">
         <h1 className="mt-24 mb-4 text-2xl text-center">Create an account</h1>
         <form action="" method="post" onSubmit={handleSignupForm} className="max-w-sm mx-auto">
@@ -128,7 +126,7 @@ export default function Signup({ loggedIn, setLoggedIn, userId, setUserId }: Log
             />
           </div>
           <div className="mb-5">
-            <label htmlFor="signUpAvatar" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            <label htmlFor="signupAvatar" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Your profile picture
             </label>
             <input
