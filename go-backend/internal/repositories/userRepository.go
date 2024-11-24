@@ -64,17 +64,15 @@ func (ur *UserRepository) CreateUser(username, email, password, avatar string) (
 		Password:  password,
 		Avatar:    avatar,
 		Followers: 0,
-		Posts:     []models.Post{},
+		Likes:     []models.Like{},
 	}
 
-	// Create the user in the database
 	err := ur.db.Create(&user).Error
 	if err != nil {
 		ur.logger.Error("Error while creating user", zap.Error(err))
 		return nil, err
 	}
 
-	// The user.ID is now populated after Create()
 	ur.logger.Info("User created successfully", zap.String("username", user.Username))
 	return &user, nil
 }

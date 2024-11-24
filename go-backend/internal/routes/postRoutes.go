@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func PostRoutes(app *fiber.App, pc *controllers.ProdPostController) {
+func PostRoutes(app *fiber.App, pc *controllers.PostController, lc *controllers.LikeController, authMiddeware fiber.Handler) {
 
 	posts := app.Group("/posts")
 
@@ -21,4 +21,15 @@ func PostRoutes(app *fiber.App, pc *controllers.ProdPostController) {
 	posts.Put("/:id", pc.LikePost)
 
 	posts.Delete("/:id", pc.DeletePost)
+
+	posts.Get("/:id/like/count", lc.GetLikeCount)
+
+	posts.Get("/:id/hasliked", lc.HasUserLiked)
+
+	protected := app.Group("/api/posts", authMiddeware)
+
+	protected.Post("/:id/like", lc.LikePost)
+
+	protected.Delete("/:id/unlike", lc.UnlikePost)
+
 }

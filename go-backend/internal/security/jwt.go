@@ -9,7 +9,7 @@ import (
 )
 
 // GenerateJWT generates a new JWT token for a given user ID and username.
-func GenerateJWT(userID string, username string) (string, error) {
+func GenerateJWT(userId string, username string) (string, error) {
 	// Get the JWT secret from environment variables
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {
@@ -17,7 +17,7 @@ func GenerateJWT(userID string, username string) (string, error) {
 	}
 
 	claims := jwt.MapClaims{
-		"user_id":  userID,                                // Add user ID as a claim
+		"user_id":  userId,                                // Add user ID as a claim
 		"username": username,                              // Add username as a claim
 		"exp":      time.Now().Add(time.Hour * 24).Unix(), // Token expiration time
 	}

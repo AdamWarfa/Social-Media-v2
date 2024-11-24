@@ -16,7 +16,6 @@ type PostServiceI interface {
 	GetPost(id string) (models.Post, error)
 	GetPostsByAuthor(id string) ([]models.Post, error)
 	CreatePost(PostRequest models.PostRequest) (models.Post, error)
-	LikePost(id string, post *models.Post) (models.Post, error)
 	DeletePost(id string) error
 }
 
@@ -55,22 +54,9 @@ func (ps *PostService) CreatePost(PostRequest models.PostRequest) (models.Post, 
 	// Format to ISO 8601 (RFC 3339)
 	formattedDate := date.Format("2006-01-02T15:04:05.000Z")
 
-	post := models.Post{Id: newUUID.String(), Text: PostRequest.Text, ImgSrc: PostRequest.ImgSrc, AuthorID: PostRequest.AuthorID, Likes: 0, PostDate: formattedDate}
+	post := models.Post{Id: newUUID.String(), Text: PostRequest.Text, ImgSrc: PostRequest.ImgSrc, AuthorId: PostRequest.AuthorId, Likes: []models.Like{}, PostDate: formattedDate}
 
 	return ps.repo.CreatePost(post)
-}
-
-func (ps *PostService) LikePost(id string, post *models.Post) (models.Post, error) {
-
-	post.Likes = post.Likes + 1
-
-	likedPost, err := ps.repo.LikePost(id, post)
-	if err != nil {
-		ps.logger.Error("Failed to like post (service)", zap.Error(err))
-		return models.Post{}, err
-	}
-
-	return likedPost, nil
 }
 
 func (ps *PostService) DeletePost(id string) error {

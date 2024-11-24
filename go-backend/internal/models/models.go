@@ -3,16 +3,10 @@ package models
 type Post struct {
 	Id       string `json:"id" gorm:"primaryKey" validate:"uuid"`
 	Text     string `json:"text" validate:"required,min=5,max=255"`
-	AuthorID string `json:"authorId" gorm:"column:author_id;not null;index"` // Foreign key to User
+	AuthorId string `json:"authorId" gorm:"column:author_id;not null;index"`
 	ImgSrc   string `json:"imgSrc" gorm:"column:img_src"`
-	Likes    int    `json:"likes" validate:"gte=0"`
+	Likes    []Like `json:"-" gorm:"foreignKey:PostId"`
 	PostDate string `json:"postDate" gorm:"column:post_date"`
-}
-
-type PostRequest struct {
-	Text     string `json:"text" validate:"required,min=5,max=255"`
-	ImgSrc   string `json:"imgSrc" validate:"required,url"`
-	AuthorID string `json:"authorId" validate:"required,uuid"`
 }
 
 type User struct {
@@ -22,7 +16,13 @@ type User struct {
 	Password  string `json:"password" validate:"required,min=6"`
 	Avatar    string `json:"avatar"`
 	Followers int    `json:"followers" validate:"gte=0"`
-	Posts     []Post `gorm:"foreignKey:AuthorID"` // One-to-many relationship with Post
+	Likes     []Like `json:"-" gorm:"foreignKey:UserId"`
+}
+
+type PostRequest struct {
+	Text     string `json:"text" validate:"required,min=5,max=255"`
+	ImgSrc   string `json:"imgSrc" validate:"required,url"`
+	AuthorId string `json:"authorId" validate:"required,uuid"`
 }
 
 type LoginRequest struct {
@@ -37,26 +37,8 @@ type RegisterRequest struct {
 	Avatar   string `json:"avatar"`
 }
 
-type NbaTeam struct {
-	Id           int    `json:"id" gorm:"primaryKey"`
-	Abbreviation string `json:"abbreviation"`
-	City         string `json:"city"`
-	Conference   string `json:"conference"`
-	Division     string `json:"division"`
-	FullName     string `json:"full_name"`
-	Name         string `json:"name"`
-}
-
-type NbaGame struct {
-	Id               int     `json:"id" gorm:"primaryKey"`
-	Date             string  `json:"date"`
-	HomeTeam         NbaTeam `json:"home_team"`
-	HomeTeamScore    int     `json:"home_team_score"`
-	Period           int     `json:"period"`
-	Postseason       bool    `json:"postseason"`
-	Season           int     `json:"season"`
-	Status           string  `json:"status"`
-	Time             string  `json:"time"`
-	VisitorTeam      NbaTeam `json:"visitor_team"`
-	VisitorTeamScore int     `json:"visitor_team_score"`
+type Like struct {
+	Id     string `json:"id" gorm:"primaryKey" validate:"uuid"`
+	UserId string `json:"userId" gorm:"not null;index"` // Foreign key to User
+	PostId string `json:"postId" gorm:"not null;index"` // Foreign key to Post
 }

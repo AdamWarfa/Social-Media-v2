@@ -5,6 +5,7 @@ import (
 	"os"
 	"somev2/internal/controllers"
 	"somev2/internal/initializers"
+	"somev2/internal/middleware"
 	"somev2/internal/models"
 	"somev2/internal/repositories"
 	"somev2/internal/routes"
@@ -29,14 +30,19 @@ func main() {
 		panic(err)
 	}
 
-	// if err := initializers.DB.AutoMigrate(&models.Post{}); err != nil {
-	// 	panic(err)
-	// }
+	if err := initializers.DB.AutoMigrate(&models.Post{}); err != nil {
+		panic(err)
+	}
+
+	initializers.DB.AutoMigrate(&models.Like{})
+	initializers.DB.Exec("ALTER TABLE likes ADD CONSTRAINT unique_user_post_like UNIQUE (user_id, post_id);")
 
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {
 		log.Fatal("JWT_SECRET environment variable not set")
 	}
+
+	authMiddleware := middleware.AuthMiddleware(jwtSecret)
 
 	// Fiber instance
 	app := fiber.New()
@@ -51,17 +57,21 @@ func main() {
 	// Post
 	postRepo := repositories.NewPostRepository(initializers.DB)
 	postService := services.NewPostService(postRepo)
-	postController := controllers.NewProdPostController(postService, v)
+	postController := controllers.NewPostController(postService, v)
 
 	// User
 	userRepo := repositories.NewUserRepository(initializers.DB)
 	userService := services.NewUserService(userRepo)
 	userController := controllers.NewUserController(userService, v)
 
+	// Likes
+	likeRepo := repositories.NewLikeRepository(initializers.DB)
+	likeService := services.NewLikeService(likeRepo)
+	likeController := controllers.NewLikeController(likeService)
+
 	// Routes
-	routes.PostRoutes(app, postController)
+	routes.PostRoutes(app, postController, likeController, authMiddleware)
 	routes.UserRoutes(app, userController, jwtSecret)
-	routes.NbaRoutes(app)
 
 	// Start server in a goroutine
 	go func() {

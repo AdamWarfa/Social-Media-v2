@@ -91,9 +91,6 @@ export default function Nav({ userId, currentPage }: HeaderProps) {
                   </NavLink>
                   {signUpLink}
                   <AuthStatus currentPage={currentPage} auth={auth} currentPageClass={currentPageClass} otherPageClass={otherPageClass} />
-                  <NavLink to="/nbagames" className={currentPage == "nbagames" ? currentPageClass : otherPageClass}>
-                    NBA Games
-                  </NavLink>
                 </div>
               </div>
             </div>
