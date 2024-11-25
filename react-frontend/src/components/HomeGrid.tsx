@@ -41,7 +41,7 @@ export default function HomeGrid({ userId, loggedIn }: HomeGridProps) {
             <option value="popular">Popular</option>
           </select>
 
-          {postList && postList.map((post) => <Post key={post.id} post={post} />)}
+          {postList && postList.map((post) => <Post key={post.id} post={post} loggedIn={loggedIn} />)}
         </div>
       </div>
     </>

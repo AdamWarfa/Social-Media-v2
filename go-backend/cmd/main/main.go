@@ -26,16 +26,14 @@ func init() {
 
 func main() {
 	// Migrate the schema
-	if err := initializers.DB.AutoMigrate(&models.User{}); err != nil {
+
+	if err := initializers.DB.AutoMigrate(
+		&models.User{},
+		&models.Post{},
+		&models.Like{},
+	); err != nil {
 		panic(err)
 	}
-
-	if err := initializers.DB.AutoMigrate(&models.Post{}); err != nil {
-		panic(err)
-	}
-
-	initializers.DB.AutoMigrate(&models.Like{})
-	initializers.DB.Exec("ALTER TABLE likes ADD CONSTRAINT unique_user_post_like UNIQUE (user_id, post_id);")
 
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if jwtSecret == "" {

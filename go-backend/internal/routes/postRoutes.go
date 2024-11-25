@@ -22,14 +22,14 @@ func PostRoutes(app *fiber.App, pc *controllers.PostController, lc *controllers.
 
 	posts.Delete("/:id", pc.DeletePost)
 
-	posts.Get("/:id/like/count", lc.GetLikeCount)
-
-	posts.Get("/:id/hasliked", lc.HasUserLiked)
+	posts.Get("/:postId/like/count", lc.GetLikeCount)
 
 	protected := app.Group("/api/posts", authMiddeware)
 
-	protected.Post("/:id/like", lc.LikePost)
+	protected.Post("/:postId/like", lc.LikePost)
 
-	protected.Delete("/:id/unlike", lc.UnlikePost)
+	protected.Delete("/:postId/unlike", lc.UnlikePost)
+
+	protected.Get("/:postId/hasliked", lc.HasUserLiked)
 
 }

@@ -2,40 +2,71 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { PostType } from "../models/post";
 import { AuthorType } from "../models/author";
-import { getAuthor } from "../api/get";
-import { likePost } from "../api/likePost";
+import { getAuthor, getHasLiked, getLikeCount } from "../api/get";
+import { likePost, unlikePost } from "../api/likePost";
 import { deletePost } from "../api/deletePost";
 
 interface PostProps {
   post: PostType;
+  loggedIn: boolean;
 }
 
-export default function Post({ post }: PostProps) {
+export default function Post({ post, loggedIn }: PostProps) {
   const [thisPost, setThisPost] = useState<PostType>(post);
   const [author, setAuthor] = useState<AuthorType>({} as AuthorType);
   const [isPostDropdown, setIsPostDropdown] = useState(false);
+  const [hasLiked, setHasLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   useEffect(() => {
-    function findAuthor() {
-      getAuthor(post.authorId).then((data) => {
-        setAuthor(data);
+    findAuthor();
+    findLikeCount();
+    if (loggedIn) {
+      getHasLiked(post).then((data) => {
+        setHasLiked(data.hasLiked);
       });
     }
-    findAuthor();
   }, []);
 
-  const handleLikePost = () => {
-    likePost(thisPost)
-      .then((response) => {
-        // Use the returned object directly to update the state
-        setThisPost(response);
+  function findLikeCount() {
+    getLikeCount(post).then((data) => {
+      setLikeCount(data.likes);
+    });
+  }
 
-        // Additional logic after the state is updated, if needed
-        console.log("Post liked successfully:", response);
-      })
-      .catch((error) => {
-        console.error("Error liking post:", error);
-      });
+  function findAuthor() {
+    getAuthor(post.authorId).then((data) => {
+      setAuthor(data);
+    });
+  }
+
+  const handleLikePost = () => {
+    if (!loggedIn) {
+      alert("Please log in to like this post.");
+      return;
+    }
+
+    if (hasLiked) {
+      unlikePost(thisPost)
+        .then((response) => {
+          setLikeCount(likeCount - 1);
+          console.log("Post unliked successfully:", response);
+          setHasLiked(false);
+        })
+        .catch((error) => {
+          console.error("Error unliking post:", error);
+        });
+    } else {
+      likePost(thisPost)
+        .then((response) => {
+          setLikeCount(likeCount + 1);
+          console.log("Post liked successfully:", response);
+          setHasLiked(true);
+        })
+        .catch((error) => {
+          console.error("Error liking post:", error);
+        });
+    }
   };
 
   const dropdownClass = "absolute left-[52vw] z-10 mt-[-30px] w-48 rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none transition ease-out duration-100";
@@ -118,10 +149,10 @@ export default function Post({ post }: PostProps) {
       <div className="flex items-center justify-between text-gray-500">
         <div className="flex items-center space-x-2">
           <button onClick={handleLikePost} className="flex justify-center items-center gap-2 px-2 hover:bg-gray-50 rounded-full p-1">
-            <svg className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <svg className={hasLiked ? "w-5 h-5 fill-red-900" : "w-5 h-5 fill-current"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M12 21.35l-1.45-1.32C6.11 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-4.11 6.86-8.55 11.54L12 21.35z" />
             </svg>
-            <span>{thisPost.likes} Likes</span>
+            <span>{likeCount} Likes</span>
           </button>
         </div>
         <button className="flex justify-center items-center gap-2 px-2 hover:bg-gray-50 rounded-full p-1">

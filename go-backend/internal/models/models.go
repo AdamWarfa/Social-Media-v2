@@ -39,6 +39,6 @@ type RegisterRequest struct {
 
 type Like struct {
 	Id     string `json:"id" gorm:"primaryKey" validate:"uuid"`
-	UserId string `json:"userId" gorm:"not null;index"` // Foreign key to User
-	PostId string `json:"postId" gorm:"not null;index"` // Foreign key to Post
+	UserId string `json:"userId" gorm:"not null;index" gorm:"constraint:OnDelete:CASCADE;OnUpdate:CASCADE"`
+	PostId string `json:"postId" gorm:"not null;index" gorm:"constraint:OnDelete:CASCADE;OnUpdate:CASCADE"`
 }

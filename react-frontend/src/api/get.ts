@@ -29,4 +29,21 @@ async function getPostsByAuthor(id: string | undefined) {
   return data;
 }
 
-export { getPosts, getAuthor, getPostsByAuthor };
+async function getLikeCount(post: PostType) {
+  const res = await fetch(`${endpoint}/posts/${post.id}/like/count`);
+  const data = await res.json();
+  return data;
+}
+
+async function getHasLiked(post: PostType) {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${endpoint}/api/posts/${post.id}/hasliked`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await res.json();
+  return data;
+}
+
+export { getPosts, getAuthor, getPostsByAuthor, getLikeCount, getHasLiked };
