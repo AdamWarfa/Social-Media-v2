@@ -5,13 +5,11 @@ import { User } from "../services/authFacade.ts";
 import { NavLink } from "react-router-dom";
 
 interface LoginProps {
-  loggedIn: boolean;
-  setLoggedIn: (value: boolean) => void;
   userId: string;
   setUserId: (value: string) => void;
 }
 
-const Login = ({ setLoggedIn, setUserId }: LoginProps) => {
+const Login = ({ setUserId }: LoginProps) => {
   const [user, setUser] = useState({ email: "", password: "" });
 
   const navigate = useNavigate();
@@ -35,7 +33,6 @@ const Login = ({ setLoggedIn, setUserId }: LoginProps) => {
     auth
       .signIn(user)
       .then((res) => {
-        setLoggedIn(true);
         setUserId(res.id);
         navigate(from, { replace: true });
       })

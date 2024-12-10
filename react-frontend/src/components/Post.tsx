@@ -5,23 +5,25 @@ import { AuthorType } from "../models/author";
 import { getAuthor, getHasLiked, getLikeCount } from "../api/get";
 import { likePost, unlikePost } from "../api/likePost";
 import { deletePost } from "../api/deletePost";
+import { useAuth } from "../security/AuthProvider";
 
 interface PostProps {
   post: PostType;
-  loggedIn: boolean;
 }
 
-export default function Post({ post, loggedIn }: PostProps) {
-  const [thisPost, setThisPost] = useState<PostType>(post);
+export default function Post({ post }: PostProps) {
+  const [thisPost] = useState<PostType>(post);
   const [author, setAuthor] = useState<AuthorType>({} as AuthorType);
   const [isPostDropdown, setIsPostDropdown] = useState(false);
   const [hasLiked, setHasLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
+  const { isLoggedIn } = useAuth();
+
   useEffect(() => {
     findAuthor();
     findLikeCount();
-    if (loggedIn) {
+    if (isLoggedIn()) {
       getHasLiked(post).then((data) => {
         setHasLiked(data.hasLiked);
       });
@@ -41,7 +43,7 @@ export default function Post({ post, loggedIn }: PostProps) {
   }
 
   const handleLikePost = () => {
-    if (!loggedIn) {
+    if (!isLoggedIn()) {
       alert("Please log in to like this post.");
       return;
     }

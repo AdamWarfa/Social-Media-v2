@@ -2,6 +2,7 @@ import { createContext, useState, ReactNode } from "react";
 import { authProvider, User } from "../services/authFacade.ts";
 import { useContext } from "react";
 import { LoginResponse, LoginRequest } from "../services/authFacade";
+import { jwtDecode } from "jwt-decode";
 
 interface AuthContextType {
   username: string | null;
@@ -39,7 +40,15 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   function isLoggedIn() {
-    return username != null;
+    const token = localStorage.getItem("token");
+    if (!token) return false;
+
+    try {
+      const { exp } = jwtDecode(token);
+      return exp > Date.now() / 1000; // Check if token is still valid
+    } catch {
+      return false; // Invalid token
+    }
   }
 
   function isLoggedInAs(role: string[]) {

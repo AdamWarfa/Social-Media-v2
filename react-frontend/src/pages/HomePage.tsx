@@ -1,16 +1,14 @@
 import HomeGrid from "../components/HomeGrid";
 
 interface HomePageProps {
-  loggedIn: boolean;
-  setLoggedIn: (value: boolean) => void;
   userId: string;
   setUserId: (value: string) => void;
 }
 
-export default function HomePage({ loggedIn, userId }: HomePageProps) {
+export default function HomePage({ userId }: HomePageProps) {
   return (
     <>
-      <HomeGrid userId={userId} loggedIn={loggedIn} />
+      <HomeGrid userId={userId} />
     </>
   );
 }

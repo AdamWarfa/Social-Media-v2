@@ -5,8 +5,6 @@ import AuthStatus from "../security/AuthStatus";
 import { useAuth } from "../security/AuthProvider";
 
 interface HeaderProps {
-  loggedIn: boolean;
-  setLoggedIn: (value: boolean) => void;
   userId: string;
   setUserId: (value: string) => void;
   currentPage: string;

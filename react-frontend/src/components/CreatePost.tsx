@@ -4,7 +4,6 @@ import { PostRequest } from "../models/post";
 import { useAuth } from "../security/AuthProvider";
 
 interface CreatePostProps {
-  loggedIn: boolean;
   userId: string;
 }
 

@@ -11,7 +11,6 @@ import { useLocation } from "react-router-dom";
 type Page = "/" | "/profile/:id" | "/nbagames" | "/login" | "/signup" | "/logout" | "*";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false);
   const [userId, setUserId] = useState(localStorage.getItem("userId") || "");
   const [currentPage, setCurrentPage] = useState<Page>(useLocation().pathname as Page);
 
@@ -28,15 +27,15 @@ function App() {
 
   return (
     <>
-      <Nav loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} currentPage={currentPage} />
+      <Nav setUserId={setUserId} userId={userId} currentPage={currentPage} />
       <Routes>
-        <Route path="/" element={<HomePage loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
+        <Route path="/" element={<HomePage setUserId={setUserId} userId={userId} />} />
         <Route path="/profile/:id" element={<ProfilePage />} />
-        <Route path="/login" element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
-        <Route path="/signup" element={<Signup loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
+        <Route path="/login" element={<Login setUserId={setUserId} userId={userId} />} />
+        <Route path="/signup" element={<Signup setUserId={setUserId} userId={userId} />} />
         <Route path="/logout" element={<Logout />} />
 
-        <Route path="*" element={<HomePage loggedIn={loggedIn} setLoggedIn={setLoggedIn} setUserId={setUserId} userId={userId} />} />
+        <Route path="*" element={<HomePage setUserId={setUserId} userId={userId} />} />
       </Routes>
     </>
   );

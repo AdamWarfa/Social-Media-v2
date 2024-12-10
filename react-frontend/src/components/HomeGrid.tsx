@@ -6,10 +6,9 @@ import CreatePost from "./CreatePost.tsx";
 
 interface HomeGridProps {
   userId: string;
-  loggedIn: boolean;
 }
 
-export default function HomeGrid({ userId, loggedIn }: HomeGridProps) {
+export default function HomeGrid({ userId }: HomeGridProps) {
   const [postList, setPostList] = useState<PostType[] | undefined>(undefined); // Initialize as undefined
   const [sortOption, setSortOption] = useState("new");
 
@@ -35,13 +34,13 @@ export default function HomeGrid({ userId, loggedIn }: HomeGridProps) {
     <>
       <div className="py-12 flex items-center justify-center">
         <div className="mt-20 grid grid-cols-1 md:grid-cols-1 xl:grid-cols-1 gap-2">
-          <CreatePost loggedIn={loggedIn} userId={userId} />
+          <CreatePost userId={userId} />
           <select className="rounded-lg my-2" name="sortHome" id="sortHome" value={sortOption} onChange={handleSortChange}>
             <option value="new">New</option>
             <option value="popular">Popular</option>
           </select>
 
-          {postList && postList.map((post) => <Post key={post.id} post={post} loggedIn={loggedIn} />)}
+          {postList && postList.map((post) => <Post key={post.id} post={post} />)}
         </div>
       </div>
     </>

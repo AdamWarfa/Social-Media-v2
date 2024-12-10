@@ -7,8 +7,6 @@ import { postUser } from "../api/createUser";
 import { AuthorType } from "../models/author";
 
 interface LoginProps {
-  loggedIn: boolean;
-  setLoggedIn: (value: boolean) => void;
   userId: string;
   setUserId: (value: string) => void;
 }
@@ -18,7 +16,7 @@ interface UserResponse {
   usernname: string;
 }
 
-export default function Signup({ setLoggedIn, setUserId }: LoginProps) {
+export default function Signup({ setUserId }: LoginProps) {
   useEffect(() => {}, []);
 
   const handleSignUp = (loginAttempt: LoginAttempt) => {
@@ -34,7 +32,6 @@ export default function Signup({ setLoggedIn, setUserId }: LoginProps) {
 
     postUser(newUser)
       .then((response: UserResponse) => {
-        setLoggedIn(true);
         setUserId(response.usernname);
       })
       .catch((error: Error) => {
